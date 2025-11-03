@@ -1,9 +1,10 @@
 import { Activity, useEffect, useState } from 'react';
 import { useLottoNumbers } from '../../hooks/useLottoNumbers';
+import { getRecentList3 } from '../../utils/utils';
 
 export default function Home() {
     // const recentDraws = [1196, 1195, 1194]; // 원하는 회차들
-    const [getDraws, setGetDraws] = useState([1196, 1195, 1194]);
+    const [getDraws, setGetDraws] = useState(getRecentList3());
     const [searchDraw, setSearchDraw] = useState(1196);
     const results = useLottoNumbers(getDraws);
 
@@ -25,7 +26,7 @@ export default function Home() {
                     type="number"
                     placeholder="회차 입력"
                     value={searchDraw}
-                    onChange={(e) => setSearchDraw(e.target.value ? Number(e.target.value) : 1)}
+                    onChange={(e) => setSearchDraw(e.target.valueAsNumber)}
                     className="border p-2 rounded w-32"
                 />
                 <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">검색</button>

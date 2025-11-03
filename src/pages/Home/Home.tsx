@@ -20,6 +20,7 @@ export default function Home() {
             <h1 className="text-3xl font-bold mb-6">Lotto(6/45) 대시보드</h1>
 
             <div className="mb-6 flex gap-2 items-center">
+                <h2 className="text-xl font-semibold">회차 검색 :</h2>
                 <input
                     type="number"
                     placeholder="회차 입력"

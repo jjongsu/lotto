@@ -36,7 +36,9 @@ export default function Home() {
                 <Activity mode={target ? 'visible' : 'hidden'}>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div className="p-4 bg-white shadow rounded-lg">
-                            <p className="font-semibold">회차 : {target?.data?.drwNo}</p>
+                            <p className="font-semibold">
+                                회차 : {target?.data?.drwNo} / ({target?.data?.drwNoDate})
+                            </p>
                             <p>1등 당첨자 수 : {target?.data?.firstPrzwnerCo}</p>
                             <p>1등 당첨 금액 : {target?.data?.firstWinamnt?.toLocaleString?.()}원</p>
                             <p>번호 :</p>
@@ -64,7 +66,9 @@ export default function Home() {
                         .sort((a, b) => (b.data?.drwNo || 0) - (a.data?.drwNo || 0))
                         .map(({ data }, idx) => (
                             <div key={data?.drwNo + '-lotto-' + idx} className="p-4 bg-white shadow rounded-lg">
-                                <p className="font-semibold">회차 : {data?.drwNo}</p>
+                                <p className="font-semibold">
+                                    회차 : {data?.drwNo} / ({data?.drwNoDate})
+                                </p>
                                 <p>1등 당첨자 수 : {data?.firstPrzwnerCo}</p>
                                 <p>1등 당첨 금액 : {data?.firstWinamnt?.toLocaleString?.()}원</p>
                                 <p>번호 :</p>

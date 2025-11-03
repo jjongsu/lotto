@@ -1,5 +1,5 @@
 import { useQueries } from '@tanstack/react-query';
-import { fetchLotto } from '../../api/getLotto';
+import { fetchLotto } from '../apis/getLotto';
 
 export const useLottoNumbers = (drawNumbers: number[]) => {
     return useQueries({

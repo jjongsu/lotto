@@ -22,16 +22,12 @@ export default function useLottoData(drwNos: number[]) {
 
     const isLoading = useMemo(() => amountsQueries.some((q) => q.isLoading) || lottoQueries.some((q) => q.isLoading), [amountsQueries, lottoQueries]);
     const isError = useMemo(() => amountsQueries.some((q) => q.isError) || lottoQueries.some((q) => q.isError), [amountsQueries, lottoQueries]);
-    const data = useMemo(
-        () =>
-            lottoQueries.map(({ data }) => {
-                const targetAmount = amountsQueries.flatMap((amountData) => amountData.data).find((el) => el?.drwNo === data?.drwNo);
-                if (targetAmount) {
-                    return { ...data, ...targetAmount };
-                }
-            }),
-        [amountsQueries, lottoQueries]
-    );
+    const data = lottoQueries.map(({ data }) => {
+        const targetAmount = amountsQueries.flatMap((amountData) => amountData.data).find((el) => el?.drwNo === data?.drwNo);
+        if (targetAmount) {
+            return { ...data, ...targetAmount };
+        }
+    });
 
     return { isLoading, isError, data };
 }

@@ -8,6 +8,8 @@ export default function Home() {
     const [searchDraw, setSearchDraw] = useState(Math.max(...getRecentList3()));
     const { data, isLoading } = useLottoData(getDraws);
 
+    console.log(data);
+
     useEffect(() => {
         setGetDraws((prev) => Array.from(new Set([...prev, searchDraw])));
     }, [searchDraw]);

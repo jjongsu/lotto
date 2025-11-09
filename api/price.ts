@@ -16,11 +16,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
         const html = await response.text();
         const $ = cheerio.load(html);
-        const prizes: { rank: number; winAmount: string }[] = [];
+        const prizes: { rank: number; winAmount: number }[] = [];
 
         // ✅ "순위"는 직접 1~5 지정, "1게임당 당첨금액"은 td.eq(3)
         $('table.tbl_data tbody tr').each((i, el) => {
-            const winAmount = $(el).find('td').eq(3).text().trim(); // 1게임당 당첨금액
+            const winAmountStr = $(el).find('td').eq(3).text().trim(); // "2,939,186,738원"
+            const winAmount = Number(winAmountStr.replace(/,/g, '').replace(/원/g, '')); // 숫자로 변환
             prizes.push({ rank: i + 1, winAmount });
         });
 

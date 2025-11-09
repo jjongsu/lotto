@@ -30,8 +30,8 @@
 import { useQueries, type UseQueryResult } from '@tanstack/react-query';
 
 export interface LottoPrize {
-    rank: string;
-    winAmount: string;
+    rank: number;
+    winAmount: number;
 }
 
 interface UseLottoPrizeResult {

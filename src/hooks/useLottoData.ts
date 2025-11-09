@@ -20,7 +20,10 @@ export default function useLottoData(drwNos: number[]) {
 
     const isLoading = lottoQueries.some((el) => el.isLoading);
     const isError = lottoQueries.some((el) => el.isError);
-    const data = lottoQueries.map(({ data }) => data);
+    const data = lottoQueries.map(({ data }) => {
+        const target = amountsQueries.flatMap((amountQuery) => amountQuery.data).find((amount) => amount?.drwNo === data?.drwNo);
+        return { ...data, ...target };
+    });
 
     // const isLoading = useMemo(() => amountsQueries.some((q) => q.isLoading) || lottoQueries.some((q) => q.isLoading), [amountsQueries, lottoQueries]);
     // const isError = useMemo(() => amountsQueries.some((q) => q.isError) || lottoQueries.some((q) => q.isError), [amountsQueries, lottoQueries]);

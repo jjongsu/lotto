@@ -1,5 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import * as cheerio from 'cheerio';
+import iconv from 'iconv-lite';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
     const drwNo = req.query.drwNo as string;
@@ -14,9 +15,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             body: new URLSearchParams({ drwNo }),
         });
 
-        const html = await response.text();
+        // ArrayBuffer → Buffer → EUC-KR → UTF-8
+        const arrayBuffer = await response.arrayBuffer();
+        const buffer = Buffer.from(arrayBuffer);
+        const html = iconv.decode(buffer, 'euc-kr');
+
         const $ = cheerio.load(html);
         const prizes: { rank: number; winAmount: number; winAmountStr1: string; winAmountStr2: string; winAmountStr3: string }[] = [];
+
+        // const html = await response.text();
+        // const $ = cheerio.load(html);
+        // const prizes: { rank: number; winAmount: number; winAmountStr1: string; winAmountStr2: string; winAmountStr3: string }[] = [];
 
         // ✅ "순위"는 직접 1~5 지정, "1게임당 당첨금액"은 td.eq(3)
         $('table.tbl_data tbody tr').each((i, el) => {

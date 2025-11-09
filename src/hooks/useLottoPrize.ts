@@ -1,41 +1,15 @@
-// import { useEffect, useState } from 'react';
-
-// export interface LottoPrize {
-//     rank: string;
-//     winAmount: string;
-// }
-
-// export function useLottoPrize(drwNo?: number) {
-//     const [data, setData] = useState<LottoPrize[] | null>(null);
-//     const [loading, setLoading] = useState(true);
-//     const [error, setError] = useState<Error | null>(null);
-
-//     useEffect(() => {
-//         if (!drwNo) return;
-//         setLoading(true);
-
-//         fetch(`/api/price?drwNo=${drwNo}`)
-//             .then((res) => {
-//                 if (!res.ok) throw new Error(`HTTP ${res.status}`);
-//                 return res.json();
-//             })
-//             .then(setData)
-//             .catch(setError)
-//             .finally(() => setLoading(false));
-//     }, [drwNo]);
-
-//     return { data, loading, error };
-// }
-
 import { useQueries, type UseQueryResult } from '@tanstack/react-query';
 
 export interface LottoPrize {
-    rank: number;
-    winAmount: number;
+    winAmount1: string;
+    winAmount2: string;
+    winAmount3: string;
+    winAmount4: string;
+    winAmount5: string;
 }
 
 interface UseLottoPrizeResult {
-    data: (LottoPrize[] | undefined)[];
+    data: (LottoPrize | undefined)[];
     loading: boolean;
     error: (Error | null)[];
 }
@@ -44,13 +18,13 @@ interface UseLottoPrizeResult {
  * drwNo 배열로 여러 회차 데이터를 가져오는 hook
  */
 export function useLottoPrize(drwNos: number[]): UseLottoPrizeResult {
-    const queries: UseQueryResult<LottoPrize[], Error>[] = useQueries({
+    const queries: UseQueryResult<LottoPrize, Error>[] = useQueries({
         queries: drwNos.map((drwNo) => ({
             queryKey: ['lottoPrize', drwNo],
             queryFn: async () => {
                 const res = await fetch(`/api/price?drwNo=${drwNo}`);
                 if (!res.ok) throw new Error(`HTTP ${res.status}`);
-                return res.json() as Promise<LottoPrize[]>;
+                return { ...res.json(), drwNo } as Promise<LottoPrize & { drwNo: number }>;
             },
             enabled: !!drwNo, // drwNo가 존재할 때만 실행
         })),

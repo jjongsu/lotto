@@ -1,25 +1,20 @@
 import { Activity, useEffect, useState } from 'react';
-import { useLottoNumbers } from '../../hooks/useLottoNumbers';
 import { getRecentList3 } from '../../utils/utils';
-import { useLottoPrize } from '../../hooks/useLottoPrize';
+import useLottoData from '../../hooks/useLottoData';
 
 export default function Home() {
     // const recentDraws = [1196, 1195, 1194]; // 원하는 회차들
     const [getDraws, setGetDraws] = useState(getRecentList3());
     const [searchDraw, setSearchDraw] = useState(Math.max(...getRecentList3()));
-    const results = useLottoNumbers(getDraws);
-
-    const { data } = useLottoPrize(getDraws);
-
-    console.log(data);
+    const { data, isLoading } = useLottoData(getDraws);
 
     useEffect(() => {
         setGetDraws((prev) => Array.from(new Set([...prev, searchDraw])));
     }, [searchDraw]);
 
-    if (results.every((r) => r.isLoading)) return <p>Loading...</p>;
+    if (isLoading) return <p>Loading...</p>;
 
-    const target = results.find(({ data }) => data?.drwNo === searchDraw);
+    const target = data.find((data) => data?.drwNo === searchDraw);
 
     return (
         <div className="container mx-auto p-4">
@@ -43,14 +38,18 @@ export default function Home() {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div className="p-4 bg-white shadow rounded-lg">
                             <p className="font-semibold">
-                                회차 : {target?.data?.drwNo} / ({target?.data?.drwNoDate})
+                                회차 : {target?.drwNo} / ({target?.drwNoDate})
                             </p>
-                            <p>1등 당첨자 수 : {target?.data?.firstPrzwnerCo}</p>
-                            <p>1등 당첨 금액 : {target?.data?.firstWinamnt?.toLocaleString?.()}원</p>
+                            <p>1등 당첨자 수 : {target?.firstPrzwnerCo}</p>
+                            <p>1등 당첨 금액 : {target?.firstWinamnt?.toLocaleString?.()}원</p>
+                            {target?.winAmount2 && <p>2등 당첨 금액 : {target?.winAmount2}</p>}
+                            {target?.winAmount3 && <p>3등 당첨 금액 : {target?.winAmount3}</p>}
+                            {target?.winAmount4 && <p>4등 당첨 금액 : {target?.winAmount4}</p>}
+                            {target?.winAmount5 && <p>5등 당첨 금액 : {target?.winAmount5}</p>}
                             <p>번호 :</p>
                             <p>
-                                {`${target?.data?.drwtNo1}, ${target?.data?.drwtNo2}, ${target?.data?.drwtNo3}, ${target?.data?.drwtNo4}, ${target?.data?.drwtNo5}, ${target?.data?.drwtNo6}`}{' '}
-                                + {target?.data?.bnusNo}
+                                {`${target?.drwtNo1}, ${target?.drwtNo2}, ${target?.drwtNo3}, ${target?.drwtNo4}, ${target?.drwtNo5}, ${target?.drwtNo6}`} +{' '}
+                                {target?.bnusNo}
                             </p>
                         </div>
                     </div>
@@ -58,7 +57,7 @@ export default function Home() {
                 <Activity mode={!target ? 'visible' : 'hidden'}>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div className="p-4 bg-white shadow rounded-lg">
-                            <p className="font-semibold">{target?.isLoading ? '검색중...' : '검색 결과 없음'}</p>
+                            <p className="font-semibold">{target?.returnValue ? '검색중...' : '검색 결과 없음'}</p>
                         </div>
                     </div>
                 </Activity>
@@ -67,10 +66,10 @@ export default function Home() {
             <section className="mb-8">
                 <h2 className="text-xl font-semibold mb-4">최근 당첨 근황</h2>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {results
-                        .filter((el) => el.status === 'success' && el.data.returnValue === 'success')
-                        .sort((a, b) => (b.data?.drwNo || 0) - (a.data?.drwNo || 0))
-                        .map(({ data }, idx) => (
+                    {data
+                        .filter((el) => el?.returnValue === 'success')
+                        .sort((a, b) => (b?.drwNo || 0) - (a?.drwNo || 0))
+                        .map((data, idx) => (
                             <div key={data?.drwNo + '-lotto-' + idx} className="p-4 bg-white shadow rounded-lg">
                                 <p className="font-semibold">
                                     회차 : {data?.drwNo} / ({data?.drwNoDate})

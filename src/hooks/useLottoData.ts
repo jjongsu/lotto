@@ -18,11 +18,11 @@ export default function useLottoData(drwNos: number[]) {
         })),
     });
 
-    const isLoading = lottoQueries.some((el) => el.isLoading);
     const isError = lottoQueries.some((el) => el.isError);
-    const data = lottoQueries.map(({ data }) => {
-        const target = amountsQueries.flatMap((amountQuery) => amountQuery.data).find((amount) => amount?.drwNo === data?.drwNo);
-        return { ...data, ...target };
+    const data = lottoQueries.map(({ data, isLoading }) => {
+        const target = amountsQueries.map(({ data, isFetched }) => ({ data, isFetched })).find((amountQuery) => amountQuery.data?.drwNo === data?.drwNo);
+        const amountData = { ...target?.data, amountIsFetched: target?.isFetched };
+        return { ...data, ...amountData, isLoading };
     });
 
     // const isLoading = useMemo(() => amountsQueries.some((q) => q.isLoading) || lottoQueries.some((q) => q.isLoading), [amountsQueries, lottoQueries]);
@@ -34,5 +34,5 @@ export default function useLottoData(drwNos: number[]) {
     //     }
     // });
 
-    return { isLoading, isError, data, amountsQueries };
+    return { isError, data, amountsQueries };
 }

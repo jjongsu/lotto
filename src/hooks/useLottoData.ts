@@ -1,39 +1,20 @@
 import { useQueries } from '@tanstack/react-query';
-// import { fetchLotto } from '../apis/getLotto';
-// import { posLottoAmount } from '../apis/postLottoAmount';
-// import { useMemo } from 'react';
+import { fetchLotto } from '../apis/getLotto';
+import { posLottoAmount } from '../apis/postLottoAmount';
 
 export default function useLottoData(drwNos: number[]) {
-    // const amountsQueries = useQueries({
-    //     queries: drwNos.map((drwNo) => ({
-    //         queryKey: ['lotto', 'amount', drwNo],
-    //         queryFn: async () => posLottoAmount(drwNo),
-    //         enabled: !!drwNo, // drwNo가 존재할 때만 실행
-    //     })),
-    // });
+    const amountsQueries = useQueries({
+        queries: drwNos.map((drwNo) => ({
+            queryKey: ['lotto', 'amount', drwNo],
+            queryFn: async () => posLottoAmount(drwNo),
+            enabled: !!drwNo, // drwNo가 존재할 때만 실행
+        })),
+    });
 
     const lottoQueries = useQueries({
-        queries: drwNos.map((drwNo) => ({
-            queryKey: ['lotto', 'info', drwNo],
-            queryFn: async () => {
-                const priceRes = await fetch(`/api/price?drwNo=${drwNo}`);
-                if (import.meta.env.DEV) {
-                    const numRes = await fetch(`/lotto/common.do?method=getLottoNumber&drwNo=${drwNo}`);
-
-                    if (!numRes.ok || !priceRes.ok) throw new Error('Network error');
-                    const data = { ...numRes.json(), ...priceRes.json() };
-
-                    return data;
-                } else {
-                    const numRes = await fetch(`/api/lotto?drwNo=${drwNo}`);
-
-                    if (!numRes.ok || !priceRes.ok) throw new Error('Network error');
-                    const data = { ...numRes.json(), ...priceRes.json() };
-
-                    return data;
-                }
-            },
-            enabled: !!drwNos.length,
+        queries: drwNos.map((num) => ({
+            queryKey: ['lotto', 'number', num],
+            queryFn: () => fetchLotto(num),
         })),
     });
 
@@ -50,5 +31,5 @@ export default function useLottoData(drwNos: number[]) {
     //     }
     // });
 
-    return { isLoading, isError, data };
+    return { isLoading, isError, data, amountsQueries };
 }

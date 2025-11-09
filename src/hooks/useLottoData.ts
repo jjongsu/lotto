@@ -1,12 +1,12 @@
 import { useQueries } from '@tanstack/react-query';
 import { fetchLotto } from '../apis/getLotto';
-import { posLottoAmount } from '../apis/postLottoAmount';
+import { postLottoAmount } from '../apis/postLottoAmount';
 
 export default function useLottoData(drwNos: number[]) {
     const amountsQueries = useQueries({
         queries: drwNos.map((drwNo) => ({
             queryKey: ['lotto', 'amount', drwNo],
-            queryFn: async () => posLottoAmount(drwNo),
+            queryFn: async () => postLottoAmount(drwNo),
             enabled: !!drwNo, // drwNo가 존재할 때만 실행
         })),
     });

@@ -29,7 +29,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             prizes[`winAmount${i + 1}`] = winAmount;
         });
 
-        return res.status(200).json(prizes);
+        return res.status(200).json({ drwNo, ...prizes });
     } catch (err: any) {
         return res.status(500).json({ error: err.message });
     }

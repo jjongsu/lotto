@@ -7,8 +7,8 @@ export interface LottoPrize {
     winAmount5: string;
 }
 
-export const posLottoAmount = async (drwNo: number) => {
+export const postLottoAmount = async (drwNo: number) => {
     const res = await fetch(`/api/price?drwNo=${drwNo}`);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    return { ...res.json(), drwNo } as Promise<LottoPrize[]>;
+    return res.json() as Promise<LottoPrize[]>;
 };

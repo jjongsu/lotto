@@ -1,23 +1,19 @@
 import { Activity, useEffect, useState } from 'react';
 import { getRecentList3 } from '../../utils/utils';
 import useLottoData from '../../hooks/useLottoData';
+import { BeatLoader, MoonLoader } from 'react-spinners';
 
 export default function Home() {
     // const recentDraws = [1196, 1195, 1194]; // 원하는 회차들
     const [getDraws, setGetDraws] = useState(getRecentList3());
     const [searchDraw, setSearchDraw] = useState(Math.max(...getRecentList3()));
-    const { data, amountsQueries } = useLottoData(getDraws);
-
-    console.log(
-        data,
-        amountsQueries.map((el) => el.data)
-    );
+    const { data } = useLottoData(getDraws);
 
     useEffect(() => {
         setGetDraws((prev) => Array.from(new Set([...prev, searchDraw])));
     }, [searchDraw]);
 
-    // if (isLoading) return <p>Loading...</p>;
+    const isLoading = data.some((el) => el.isLoading);
 
     const target = data.find((data) => data?.drwNo === searchDraw);
 
@@ -47,13 +43,17 @@ export default function Home() {
                             </p>
                             <p>1등 당첨자 수 : {target?.firstPrzwnerCo}</p>
                             <p>1등 당첨 금액 : {target?.firstWinamnt?.toLocaleString?.()}원</p>
-                            {target?.amountIsFetched && (
+                            {target?.amountIsFetched ? (
                                 <>
                                     <p>2등 당첨 금액 : {target?.winAmount2}</p>
                                     <p>3등 당첨 금액 : {target?.winAmount3}</p>
                                     <p>4등 당첨 금액 : {target?.winAmount4}</p>
                                     <p>5등 당첨 금액 : {target?.winAmount5}</p>
                                 </>
+                            ) : (
+                                <div className="w-full flex items-center justify-center p-2">
+                                    <BeatLoader size={10} />
+                                </div>
                             )}
                             <p>번호 :</p>
                             <p>
@@ -94,6 +94,15 @@ export default function Home() {
                         ))}
                 </div>
             </section>
+
+            {isLoading && (
+                <div
+                    className="fixed flex items-center justify-center top-0 left-0 w-full h-full bg-gray-400 opacity-50"
+                    onPointerDown={(e) => e.stopPropagation()}
+                >
+                    <MoonLoader size={70} />
+                </div>
+            )}
         </div>
     );
 }

@@ -1,7 +1,7 @@
 import { useQueries } from '@tanstack/react-query';
-import { fetchLotto } from '../apis/getLotto';
-import { posLottoAmount } from '../apis/postLottoAmount';
-import { useMemo } from 'react';
+// import { fetchLotto } from '../apis/getLotto';
+// import { posLottoAmount } from '../apis/postLottoAmount';
+// import { useMemo } from 'react';
 
 export default function useLottoData(drwNos: number[]) {
     // const amountsQueries = useQueries({

@@ -1,12 +1,17 @@
 import { Activity, useEffect, useState } from 'react';
 import { useLottoNumbers } from '../../hooks/useLottoNumbers';
 import { getRecentList3 } from '../../utils/utils';
+import { useLottoPrize } from '../../hooks/useLottoPrize';
 
 export default function Home() {
     // const recentDraws = [1196, 1195, 1194]; // 원하는 회차들
     const [getDraws, setGetDraws] = useState(getRecentList3());
     const [searchDraw, setSearchDraw] = useState(Math.max(...getRecentList3()));
     const results = useLottoNumbers(getDraws);
+
+    const { data, loading, error } = useLottoPrize(1119);
+
+    console.log(data);
 
     useEffect(() => {
         setGetDraws((prev) => Array.from(new Set([...prev, searchDraw])));

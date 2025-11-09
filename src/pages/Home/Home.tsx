@@ -9,7 +9,7 @@ export default function Home() {
     const [searchDraw, setSearchDraw] = useState(Math.max(...getRecentList3()));
     const results = useLottoNumbers(getDraws);
 
-    const { data } = useLottoPrize(1119);
+    const { data } = useLottoPrize(getDraws);
 
     console.log(data);
 

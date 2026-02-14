@@ -10,9 +10,14 @@ import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
 
 export default function Home() {
-    const [getDraws, setGetDraws] = useState(getRecentList3());
-    const [searchDraw, setSearchDraw] = useState(Math.max(...getRecentList3()));
-    const [inputDraw, setInputDraw] = useState(String(Math.max(...getRecentList3())));
+    const { initialDraws, maxDraw } = useMemo(() => {
+        const draws = getRecentList3();
+        return { initialDraws: draws, maxDraw: Math.max(...draws) };
+    }, []);
+
+    const [getDraws, setGetDraws] = useState(initialDraws);
+    const [searchDraw, setSearchDraw] = useState(maxDraw);
+    const [inputDraw, setInputDraw] = useState(String(maxDraw));
     const { data } = useLottoData(getDraws);
 
     useEffect(() => {

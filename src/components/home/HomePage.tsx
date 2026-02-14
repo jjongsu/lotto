@@ -1,3 +1,5 @@
+'use client';
+
 import { Activity, useEffect, useState } from 'react';
 import { getRecentList3 } from '../../utils/utils';
 import useLottoData from '../../hooks/useLottoData';
@@ -43,18 +45,6 @@ export default function Home() {
                             </p>
                             <p>1등 당첨자 수 : {target?.firstPrzwnerCo}</p>
                             <p>1등 당첨 금액 : {target?.firstWinamnt?.toLocaleString?.()}원</p>
-                            {target?.amountIsFetched ? (
-                                <>
-                                    <p>2등 당첨 금액 : {target?.winAmount2}</p>
-                                    <p>3등 당첨 금액 : {target?.winAmount3}</p>
-                                    <p>4등 당첨 금액 : {target?.winAmount4}</p>
-                                    <p>5등 당첨 금액 : {target?.winAmount5}</p>
-                                </>
-                            ) : (
-                                <div className="w-full flex items-center justify-center p-2">
-                                    <BeatLoader size={10} />
-                                </div>
-                            )}
                             <p>번호 :</p>
                             <p>
                                 {`${target?.drwtNo1}, ${target?.drwtNo2}, ${target?.drwtNo3}, ${target?.drwtNo4}, ${target?.drwtNo5}, ${target?.drwtNo6}`} +{' '}

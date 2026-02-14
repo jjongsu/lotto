@@ -1,11 +1,13 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
+import { NextResponse } from 'next/server';
 import * as cheerio from 'cheerio';
 import iconv from 'iconv-lite';
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
-    const drwNo = req.query.drwNo as string;
+export async function GET(request: Request) {
+    const { searchParams } = new URL(request.url);
+    const drwNo = searchParams.get('drwNo');
+
     if (!drwNo) {
-        return res.status(400).json({ error: 'drwNo parameter is required' });
+        return NextResponse.json({ error: 'drwNo parameter is required' }, { status: 400 });
     }
 
     try {
@@ -13,9 +15,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: new URLSearchParams({ drwNo }),
+            cache: 'no-store',
         });
 
-        // ArrayBuffer → Buffer → EUC-KR → UTF-8
         const arrayBuffer = await response.arrayBuffer();
         const buffer = Buffer.from(arrayBuffer);
         const html = iconv.decode(buffer, 'euc-kr');
@@ -23,14 +25,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         const $ = cheerio.load(html);
         const prizes: Record<string, string> = {};
 
-        // ✅ "순위"는 직접 1~5 지정, "1게임당 당첨금액"은 td.eq(3)
         $('table.tbl_data tbody tr').each((i, el) => {
-            const winAmount = $(el).find('td').eq(3).text().trim(); // "2,939,186,738원"
+            const winAmount = $(el).find('td').eq(3).text().trim();
             prizes[`winAmount${i + 1}`] = winAmount;
         });
 
-        return res.status(200).json({ drwNo: Number(drwNo), ...prizes });
-    } catch (err: any) {
-        return res.status(500).json({ error: err.message });
+        return NextResponse.json({ drwNo: Number(drwNo), ...prizes });
+    } catch (error) {
+        const message = error instanceof Error ? error.message : 'Internal Server Error';
+        return NextResponse.json({ error: message }, { status: 500 });
     }
 }

@@ -21,14 +21,7 @@ export interface LottoResponse {
     returnValue: 'success' | 'fail';
 }
 export const fetchLotto = async (drwNo: number): Promise<LottoResponse> => {
-    if (import.meta.env.DEV) {
-        const res = await fetch(`/lotto/common.do?method=getLottoNumber&drwNo=${drwNo}`);
-        if (!res.ok) throw new Error('Network error');
-        const data = res.json();
-
-        return data;
-    } else {
-        const res = await fetch(`/api/lotto?drwNo=${drwNo}`);
-        return res.json();
-    }
+    const res = await fetch(`/api/lotto?drwNo=${drwNo}`);
+    if (!res.ok) throw new Error('Network error');
+    return res.json();
 };

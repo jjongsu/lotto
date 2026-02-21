@@ -1,1 +1,25 @@
 @import 'tailwindcss';
+
+:root {
+    --app-nav-height: 68px;
+}
+
+html,
+body {
+    min-height: 100%;
+    margin: 0;
+}
+
+body {
+    overflow-x: hidden;
+}
+
+.appContent {
+    padding-top: var(--app-nav-height);
+}
+
+@media (max-width: 768px) {
+    :root {
+        --app-nav-height: 62px;
+    }
+}

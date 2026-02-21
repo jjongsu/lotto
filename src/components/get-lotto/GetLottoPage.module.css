@@ -1,0 +1,588 @@
+.page {
+    --panel-bg: rgb(255 255 255 / 78%);
+    --panel-border: rgb(102 150 196 / 32%);
+    --text-main: #17324f;
+    --text-muted: #5e7791;
+    --accent-cyan: #1ea9bb;
+
+    position: relative;
+    min-height: 100dvh;
+    padding: clamp(1rem, 2.4vw, 2.75rem);
+    overflow: hidden;
+    color: var(--text-main);
+    font-family: var(--font-lotto-body), 'Noto Sans KR', sans-serif;
+    background:
+        radial-gradient(120% 95% at 12% 5%, rgb(161 219 255 / 48%) 0%, transparent 44%),
+        radial-gradient(96% 76% at 92% 0%, rgb(177 245 232 / 42%) 0%, transparent 55%),
+        linear-gradient(160deg, #f6fbff 0%, #edf5ff 52%, #eaf3ff 100%);
+}
+
+.page::before,
+.page::after {
+    content: '';
+    position: absolute;
+    pointer-events: none;
+}
+
+.page::before {
+    inset: -22% auto auto -12%;
+    width: 22rem;
+    height: 22rem;
+    border-radius: 999px;
+    background: radial-gradient(circle, rgb(110 207 214 / 26%) 0%, rgb(110 207 214 / 0%) 72%);
+    filter: blur(4px);
+}
+
+.page::after {
+    right: -8rem;
+    bottom: -8rem;
+    width: 20rem;
+    height: 20rem;
+    border-radius: 999px;
+    background: radial-gradient(circle, rgb(243 179 118 / 22%) 0%, rgb(243 179 118 / 0%) 74%);
+}
+
+.backdropGrid {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.18;
+    background-image:
+        linear-gradient(to right, rgb(126 163 198 / 18%) 1px, transparent 1px),
+        linear-gradient(to bottom, rgb(126 163 198 / 18%) 1px, transparent 1px);
+    background-size: 52px 52px;
+    mask-image: radial-gradient(circle at center, rgb(0 0 0 / 100%) 20%, rgb(0 0 0 / 0%) 90%);
+}
+
+.hudPanel,
+.statusPanel,
+.rangePanel,
+.resultPanel,
+.statsPanel {
+    position: relative;
+    border: 1px solid var(--panel-border);
+    background: var(--panel-bg);
+    border-radius: 1.25rem;
+    backdrop-filter: blur(9px);
+    box-shadow:
+        0 1px 0 rgb(255 255 255 / 88%) inset,
+        0 10px 24px rgb(117 151 185 / 20%);
+}
+
+.hudPanel {
+    display: grid;
+    gap: 1.15rem;
+    grid-template-columns: 1fr minmax(280px, 450px);
+    padding: clamp(1rem, 2vw, 1.9rem);
+}
+
+.titleGroup {
+    max-width: 70ch;
+}
+
+.kicker {
+    margin: 0 0 0.55rem;
+    font-size: 0.78rem;
+    letter-spacing: 0.18em;
+    color: var(--accent-cyan);
+    text-transform: uppercase;
+}
+
+.title {
+    margin: 0;
+    color: #173a5e;
+    font-family: var(--font-lotto-display), 'Orbitron', sans-serif;
+    letter-spacing: 0.04em;
+    line-height: 1.06;
+    font-size: clamp(1.5rem, 3.3vw, 2.7rem);
+}
+
+.description {
+    margin: 0.7rem 0 0;
+    color: var(--text-muted);
+    font-size: clamp(0.92rem, 1.4vw, 1.02rem);
+}
+
+.hudControls {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.75rem;
+}
+
+.searchForm {
+    display: flex;
+    gap: 0.65rem;
+    flex-wrap: wrap;
+}
+
+.searchInput {
+    flex: 1;
+    min-width: 155px;
+    min-height: 2.85rem;
+    border: 1px solid rgb(117 166 205 / 44%);
+    border-radius: 0.8rem;
+    background: rgb(255 255 255 / 90%);
+    color: #17324f;
+    padding: 0.55rem 0.82rem;
+    font-size: 0.95rem;
+}
+
+.searchInput:focus-visible {
+    outline: 2px solid var(--accent-cyan);
+    outline-offset: 1px;
+}
+
+.searchButton,
+.moveButton,
+.rangeButton {
+    border: 1px solid rgb(91 196 186 / 64%);
+    border-radius: 0.75rem;
+    min-height: 2.85rem;
+    padding: 0.55rem 0.95rem;
+    font-family: var(--font-lotto-display), 'Orbitron', sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    transition: transform 140ms ease, box-shadow 140ms ease, filter 140ms ease;
+}
+
+.searchButton {
+    background: linear-gradient(120deg, #c9f5ef 0%, #a9ece3 52%, #90ddd4 100%);
+    color: #0f2f47;
+}
+
+.moveButton {
+    background: linear-gradient(180deg, rgb(255 255 255 / 92%) 0%, rgb(244 250 255 / 90%) 100%);
+    border-color: rgb(110 164 205 / 46%);
+    color: #173f61;
+}
+
+.rangeButton {
+    background: linear-gradient(180deg, rgb(255 255 255 / 92%) 0%, rgb(244 250 255 / 90%) 100%);
+    border-color: rgb(110 164 205 / 46%);
+    color: #173f61;
+}
+
+.searchButton:hover,
+.moveButton:hover,
+.rangeButton:hover {
+    transform: translateY(-1px);
+    box-shadow:
+        0 7px 16px rgb(71 179 167 / 20%),
+        0 0 0 1px rgb(237 255 252 / 84%) inset;
+    filter: saturate(106%);
+}
+
+.searchButton:focus-visible,
+.moveButton:focus-visible,
+.rangeButton:focus-visible {
+    outline: 2px solid var(--accent-cyan);
+    outline-offset: 2px;
+}
+
+.moveButtonRow {
+    display: flex;
+    gap: 0.55rem;
+    flex-wrap: wrap;
+}
+
+.moveButton:disabled {
+    opacity: 0.52;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+    filter: none;
+}
+
+.statusPanel {
+    margin-top: 1rem;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.85rem;
+    padding: 0.95rem;
+}
+
+.statusItem {
+    border: 1px solid rgb(130 169 207 / 32%);
+    background: linear-gradient(180deg, rgb(255 255 255 / 84%) 0%, rgb(242 249 255 / 82%) 100%);
+    border-radius: 0.9rem;
+    padding: 0.8rem 0.95rem;
+}
+
+.statusLabel {
+    display: block;
+    color: var(--text-muted);
+    font-size: 0.78rem;
+    margin-bottom: 0.35rem;
+}
+
+.statusValue {
+    color: #173d61;
+    font-size: 0.98rem;
+    letter-spacing: 0.02em;
+}
+
+.rangePanel {
+    margin-top: 1rem;
+    padding: 0.95rem;
+    display: flex;
+    justify-content: space-between;
+    gap: 0.7rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.rangeLabel {
+    color: #224763;
+    font-family: var(--font-lotto-display), 'Orbitron', sans-serif;
+    font-size: 0.92rem;
+    letter-spacing: 0.03em;
+}
+
+.rangeButtonRow {
+    display: flex;
+    gap: 0.55rem;
+    flex-wrap: wrap;
+}
+
+.rangeButton {
+    min-height: 2.45rem;
+    padding: 0.4rem 0.75rem;
+    font-size: 0.78rem;
+}
+
+.rangeButtonActive {
+    background: linear-gradient(120deg, #c9f5ef 0%, #a9ece3 52%, #90ddd4 100%);
+    border-color: rgb(91 196 186 / 64%);
+    color: #0f2f47;
+}
+
+.warningBanner {
+    margin: 0.95rem 0 0;
+    border: 1px solid rgb(242 197 118 / 52%);
+    background: rgb(255 242 217 / 88%);
+    color: #7a4f1c;
+    border-radius: 0.88rem;
+    padding: 0.75rem 0.92rem;
+    font-size: 0.9rem;
+}
+
+.resultPanel,
+.statsPanel {
+    margin-top: 1rem;
+    padding: clamp(0.95rem, 2vw, 1.55rem);
+}
+
+.sectionHeader {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.6rem 1rem;
+    align-items: baseline;
+    flex-wrap: wrap;
+}
+
+.sectionTitle {
+    margin: 0;
+    color: #194061;
+    font-size: 1.2rem;
+    font-family: var(--font-lotto-display), 'Orbitron', sans-serif;
+    letter-spacing: 0.03em;
+}
+
+.sectionDescription {
+    margin: 0;
+    font-size: 0.86rem;
+    color: var(--text-muted);
+}
+
+.resultCard {
+    margin-top: 0.95rem;
+    border: 1px solid rgb(115 166 207 / 32%);
+    border-radius: 1rem;
+    padding: 0.82rem;
+    background:
+        linear-gradient(180deg, rgb(255 255 255 / 92%) 0%, rgb(244 250 255 / 90%) 100%),
+        linear-gradient(90deg, rgb(61 178 177 / 7%) 0%, transparent 64%);
+    box-shadow: 0 6px 16px rgb(120 154 190 / 18%);
+}
+
+.resultHeader {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem 0.75rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.resultRound {
+    color: #173f61;
+    font-family: var(--font-lotto-display), 'Orbitron', sans-serif;
+    font-size: 1rem;
+    letter-spacing: 0.02em;
+}
+
+.resultDate {
+    border: 1px solid rgb(101 170 187 / 44%);
+    border-radius: 999px;
+    background: rgb(223 247 250 / 80%);
+    color: #19486a;
+    font-size: 0.74rem;
+    padding: 0.22rem 0.58rem;
+}
+
+.resultStats {
+    margin-top: 0.62rem;
+    color: #2a4966;
+    font-size: 0.89rem;
+}
+
+.resultStats p {
+    margin: 0.2rem 0;
+}
+
+.numberRow {
+    margin-top: 0.65rem;
+    display: flex;
+    align-items: center;
+    gap: 0.38rem;
+    flex-wrap: wrap;
+}
+
+.ballRow {
+    margin: 0;
+    display: flex;
+    gap: 0.45rem;
+    padding: 0;
+    list-style: none;
+    flex-wrap: wrap;
+}
+
+.ballItem {
+    margin: 0;
+    padding: 0;
+}
+
+.ball {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.86rem;
+    border: 1px solid rgb(23 62 95 / 22%);
+    box-shadow: 0 3px 8px rgb(88 121 154 / 18%);
+}
+
+.ballBandYellow {
+    background: linear-gradient(170deg, #ffda58 0%, #e3a508 100%);
+    color: #2f2200;
+}
+
+.ballBandBlue {
+    background: linear-gradient(170deg, #64b9ff 0%, #0d6db8 100%);
+    color: #eaf6ff;
+}
+
+.ballBandRed {
+    background: linear-gradient(170deg, #ff8f8f 0%, #b93434 100%);
+    color: #fff5f5;
+}
+
+.ballBandGray {
+    background: linear-gradient(170deg, #ced4e1 0%, #8f9aae 100%);
+    color: #1d2633;
+}
+
+.ballBandGreen {
+    background: linear-gradient(170deg, #9ceebf 0%, #339a60 100%);
+    color: #ecfff5;
+}
+
+.plusSymbol {
+    color: #3e5b77;
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.statsGrid {
+    margin-top: 0.95rem;
+    display: grid;
+    gap: 0.8rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+}
+
+.chartCard {
+    border: 1px solid rgb(115 166 207 / 32%);
+    border-radius: 1rem;
+    padding: 0.82rem;
+    background:
+        linear-gradient(180deg, rgb(255 255 255 / 92%) 0%, rgb(244 250 255 / 90%) 100%),
+        linear-gradient(90deg, rgb(61 178 177 / 7%) 0%, transparent 64%);
+    box-shadow: 0 6px 16px rgb(120 154 190 / 18%);
+    opacity: 0;
+    animation: card-enter 360ms ease-out forwards;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.chartTitle {
+    margin: 0;
+    color: #173f61;
+    font-size: 0.93rem;
+    font-family: var(--font-lotto-display), 'Orbitron', sans-serif;
+    letter-spacing: 0.02em;
+}
+
+.chartSurface {
+    margin-top: 0.65rem;
+    height: clamp(220px, 34vw, 300px);
+    min-height: 220px;
+}
+
+.chartMeta {
+    margin: 0.5rem 0 0;
+    color: #4a6681;
+    font-size: 0.8rem;
+}
+
+.lineChartSurface {
+    height: clamp(240px, 38vw, 340px);
+}
+
+.chartInstance {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.sumBadgeRow {
+    margin-top: 0.6rem;
+    display: flex;
+    gap: 0.45rem;
+    flex-wrap: wrap;
+}
+
+.sumBadge {
+    display: inline-flex;
+    border: 1px solid rgb(110 164 205 / 40%);
+    border-radius: 999px;
+    padding: 0.24rem 0.62rem;
+    color: #173f61;
+    font-family: var(--font-lotto-display), 'Orbitron', sans-serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    background: rgb(223 247 250 / 85%);
+}
+
+.emptyState {
+    margin: 0.95rem 0 0;
+    border: 1px solid rgb(130 169 207 / 32%);
+    background: linear-gradient(180deg, rgb(255 255 255 / 84%) 0%, rgb(242 249 255 / 82%) 100%);
+    color: #45607b;
+    border-radius: 0.9rem;
+    padding: 0.85rem 0.92rem;
+    font-size: 0.9rem;
+}
+
+.loadingOverlay {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgb(18 44 68 / 24%);
+    backdrop-filter: blur(2px);
+}
+
+.visuallyHidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+@keyframes card-enter {
+    from {
+        opacity: 0;
+        transform: translateY(10px) scale(0.985);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .chartCard {
+        animation: none !important;
+        opacity: 1;
+    }
+
+    .searchButton,
+    .moveButton,
+    .rangeButton {
+        transition: none;
+    }
+
+    .searchButton:hover,
+    .moveButton:hover,
+    .rangeButton:hover {
+        transform: none;
+    }
+}
+
+@media (max-width: 960px) {
+    .hudPanel {
+        grid-template-columns: 1fr;
+    }
+
+    .statusPanel {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 640px) {
+    .page {
+        padding: 0.92rem;
+    }
+
+    .searchForm,
+    .moveButtonRow {
+        flex-direction: column;
+    }
+
+    .searchButton,
+    .searchInput,
+    .moveButton {
+        width: 100%;
+    }
+
+    .rangeButtonRow {
+        width: 100%;
+    }
+
+    .rangeButton {
+        flex: 1;
+    }
+
+    .chartSurface {
+        height: 220px;
+    }
+
+    .lineChartSurface {
+        height: 240px;
+    }
+
+    .ball {
+        width: 1.85rem;
+        height: 1.85rem;
+    }
+}

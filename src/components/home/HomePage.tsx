@@ -2,63 +2,50 @@
 
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
-import type { LottoResponse } from '../../apis/getLotto';
-import { getRecentList3 } from '../../utils/utils';
-import useLottoData from '../../hooks/useLottoData';
 import { MoonLoader } from 'react-spinners';
+import useLottoData from '../../hooks/useLottoData';
+import { isLottoSuccessQueryData } from '../../types/lotto';
+import { parsePositiveDrawInput } from '../../utils/draw-search';
+import { getLottoBallBandClassName, getMainNumbersFromDraw, isFiniteNumber } from '../../utils/lotto-domain';
+import { getRecentList3 } from '../../utils/utils';
 import styles from './HomePage.module.css';
 
 interface HomePageProps {
     fontVariables: string;
 }
 
-type LottoQueryData = Partial<LottoResponse> & { isLoading: boolean };
-
-const getBallBandClassName = (number: number) => {
-    if (number <= 10) return styles.ballBandYellow;
-    if (number <= 20) return styles.ballBandBlue;
-    if (number <= 30) return styles.ballBandRed;
-    if (number <= 40) return styles.ballBandGray;
-    return styles.ballBandGreen;
-};
-
-const isValidNumber = (value: number | undefined): value is number => {
-    return typeof value === 'number' && Number.isFinite(value);
-};
-
 export default function HomePage({ fontVariables }: HomePageProps) {
-    const { initialDraws, maxDraw } = useMemo(() => {
+    const { initialDraws, defaultDraw } = useMemo(() => {
         const draws = getRecentList3();
-        return { initialDraws: draws, maxDraw: Math.max(...draws) };
+        const maxDraw = draws.length > 0 ? Math.max(...draws) : 1;
+        return { initialDraws: draws, defaultDraw: maxDraw };
     }, []);
 
-    const [getDraws, setGetDraws] = useState(initialDraws);
-    const [searchDraw, setSearchDraw] = useState(maxDraw);
-    const [inputDraw, setInputDraw] = useState(String(maxDraw));
-    const { data } = useLottoData(getDraws);
-    const lottoData = data as LottoQueryData[];
+    const [drawsToFetch, setDrawsToFetch] = useState(initialDraws);
+    const [searchDraw, setSearchDraw] = useState(defaultDraw);
+    const [inputDraw, setInputDraw] = useState(String(defaultDraw));
+    const { data: lottoData } = useLottoData(drawsToFetch);
 
     useEffect(() => {
-        setGetDraws((prev) => Array.from(new Set([...prev, searchDraw])));
+        setDrawsToFetch((prev) => Array.from(new Set([...prev, searchDraw])));
     }, [searchDraw]);
 
-    const isLoading = lottoData.some((el) => el.isLoading);
-    const target = lottoData.find((el) => el?.drwNo === searchDraw);
+    const isLoading = lottoData.some((item) => item.isLoading);
+    const targetDraw = lottoData.find((item) => item.drwNo === searchDraw);
 
-    const recentSuccessData = useMemo(
-        () => lottoData.filter((el): el is LottoResponse & { isLoading: boolean } => el?.returnValue === 'success').sort((a, b) => (b?.drwNo || 0) - (a?.drwNo || 0)),
-        [lottoData],
-    );
+    const recentSuccessData = useMemo(() => {
+        return lottoData.filter(isLottoSuccessQueryData).sort((a, b) => b.drwNo - a.drwNo);
+    }, [lottoData]);
 
     const winningNumbers = useMemo(() => {
-        if (!target || target.returnValue !== 'success') return [];
-        return [target.drwtNo1, target.drwtNo2, target.drwtNo3, target.drwtNo4, target.drwtNo5, target.drwtNo6].filter(isValidNumber);
-    }, [target]);
+        if (!isLottoSuccessQueryData(targetDraw)) return [];
+        return getMainNumbersFromDraw(targetDraw);
+    }, [targetDraw]);
 
     const handleSearch = () => {
-        const next = Number(inputDraw);
-        if (!Number.isFinite(next) || next <= 0) return;
-        setSearchDraw(Math.floor(next));
+        const parsed = parsePositiveDrawInput(inputDraw);
+        if (parsed === null) return;
+        setSearchDraw(parsed);
     };
 
     return (
@@ -72,12 +59,12 @@ export default function HomePage({ fontVariables }: HomePageProps) {
                     <p className={styles.description}>원하는 회차를 검색하고 최근 당첨 흐름을 한 화면에서 빠르게 확인하세요.</p>
                 </div>
                 <div className={styles.quickLinkGrid}>
-                    <Link href="/recommend-lotto" className={styles.quickLinkCard}>
+                    <Link href="/recommendations" className={styles.quickLinkCard}>
                         <span className={styles.quickLinkLabel}>Quick Route</span>
                         <strong className={styles.quickLinkTitle}>추천 번호 받기</strong>
                         <span className={styles.quickLinkDescription}>최근 빈도 가중치로 5세트 추천</span>
                     </Link>
-                    <Link href="/get-lotto" className={styles.quickLinkCard}>
+                    <Link href="/results" className={styles.quickLinkCard}>
                         <span className={styles.quickLinkLabel}>Quick Route</span>
                         <strong className={styles.quickLinkTitle}>회차 조회 페이지</strong>
                         <span className={styles.quickLinkDescription}>추첨 데이터 조회 라우터 바로 이동</span>
@@ -92,7 +79,7 @@ export default function HomePage({ fontVariables }: HomePageProps) {
                 </div>
                 <div className={styles.statusItem}>
                     <span className={styles.statusLabel}>누적 조회 회차</span>
-                    <strong className={styles.statusValue}>{getDraws.length}회</strong>
+                    <strong className={styles.statusValue}>{drawsToFetch.length}회</strong>
                 </div>
                 <div className={styles.statusItem}>
                     <span className={styles.statusLabel}>성공 데이터 수</span>
@@ -110,8 +97,8 @@ export default function HomePage({ fontVariables }: HomePageProps) {
 
                 <form
                     className={styles.searchForm}
-                    onSubmit={(e) => {
-                        e.preventDefault();
+                    onSubmit={(event) => {
+                        event.preventDefault();
                         handleSearch();
                     }}
                 >
@@ -124,7 +111,7 @@ export default function HomePage({ fontVariables }: HomePageProps) {
                         min={1}
                         placeholder="회차 입력"
                         value={inputDraw}
-                        onChange={(e) => setInputDraw(e.target.value)}
+                        onChange={(event) => setInputDraw(event.target.value)}
                         className={styles.searchInput}
                     />
                     <button type="submit" className={styles.searchButton}>
@@ -141,33 +128,33 @@ export default function HomePage({ fontVariables }: HomePageProps) {
                     <p className={styles.sectionDescription}>회차별 1등 정보와 당첨 번호를 표시합니다.</p>
                 </div>
 
-                {target ? (
-                    target.returnValue !== 'success' ? (
+                {targetDraw ? (
+                    targetDraw.returnValue !== 'success' ? (
                         <p className={styles.emptyState}>아직 로또 추첨 시작 전입니다.</p>
                     ) : (
                         <article className={styles.resultCard}>
                             <div className={styles.resultHeader}>
-                                <strong className={styles.resultRound}>{target.drwNo}회차</strong>
-                                <span className={styles.resultDate}>{target.drwNoDate}</span>
+                                <strong className={styles.resultRound}>{targetDraw.drwNo}회차</strong>
+                                <span className={styles.resultDate}>{targetDraw.drwNoDate}</span>
                             </div>
 
                             <div className={styles.resultStats}>
-                                <p>1등 당첨자 수: {target.firstPrzwnerCo}</p>
-                                <p>1등 당첨 금액: {target.firstWinamnt?.toLocaleString?.()}원</p>
+                                <p>1등 당첨자 수: {targetDraw.firstPrzwnerCo}</p>
+                                <p>1등 당첨 금액: {targetDraw.firstWinamnt?.toLocaleString?.()}원</p>
                             </div>
 
                             <div className={styles.numberRow}>
                                 <ul className={styles.ballRow}>
                                     {winningNumbers.map((number) => (
-                                        <li key={`target-${target.drwNo}-${number}`} className={styles.ballItem}>
-                                            <span className={`${styles.ball} ${getBallBandClassName(number)}`}>{number}</span>
+                                        <li key={`target-${targetDraw.drwNo}-${number}`} className={styles.ballItem}>
+                                            <span className={`${styles.ball} ${getLottoBallBandClassName(styles, number)}`}>{number}</span>
                                         </li>
                                     ))}
                                 </ul>
-                                {isValidNumber(target.bnusNo) ? (
+                                {isFiniteNumber(targetDraw.bnusNo) ? (
                                     <>
                                         <span className={styles.plusSymbol}>+</span>
-                                        <span className={`${styles.ball} ${getBallBandClassName(target.bnusNo)}`}>{target.bnusNo}</span>
+                                        <span className={`${styles.ball} ${getLottoBallBandClassName(styles, targetDraw.bnusNo)}`}>{targetDraw.bnusNo}</span>
                                     </>
                                 ) : null}
                             </div>
@@ -187,30 +174,28 @@ export default function HomePage({ fontVariables }: HomePageProps) {
                 </div>
 
                 <div className={styles.recentGrid}>
-                    {recentSuccessData.map((el, idx) => (
-                        <article className={styles.recentCard} key={`${el?.drwNo}-lotto-${idx}`} style={{ animationDelay: `${idx * 70}ms` }}>
+                    {recentSuccessData.map((draw, idx) => (
+                        <article className={styles.recentCard} key={`${draw.drwNo}-lotto-${idx}`} style={{ animationDelay: `${idx * 70}ms` }}>
                             <div className={styles.recentHeader}>
-                                <strong className={styles.recentRound}>{el?.drwNo}회차</strong>
-                                <span className={styles.recentDate}>{el?.drwNoDate}</span>
+                                <strong className={styles.recentRound}>{draw.drwNo}회차</strong>
+                                <span className={styles.recentDate}>{draw.drwNoDate}</span>
                             </div>
                             <div className={styles.recentStats}>
-                                <p>1등 당첨자 수: {el?.firstPrzwnerCo}</p>
-                                <p>1등 당첨 금액: {el?.firstWinamnt?.toLocaleString?.()}원</p>
+                                <p>1등 당첨자 수: {draw.firstPrzwnerCo}</p>
+                                <p>1등 당첨 금액: {draw.firstWinamnt?.toLocaleString?.()}원</p>
                             </div>
                             <div className={styles.numberRow}>
                                 <ul className={styles.ballRow}>
-                                    {[el?.drwtNo1, el?.drwtNo2, el?.drwtNo3, el?.drwtNo4, el?.drwtNo5, el?.drwtNo6]
-                                        .filter(isValidNumber)
-                                        .map((number) => (
-                                            <li key={`${el?.drwNo}-${number}`} className={styles.ballItem}>
-                                                <span className={`${styles.ball} ${getBallBandClassName(number)}`}>{number}</span>
-                                            </li>
-                                        ))}
+                                    {getMainNumbersFromDraw(draw).map((number) => (
+                                        <li key={`${draw.drwNo}-${number}`} className={styles.ballItem}>
+                                            <span className={`${styles.ball} ${getLottoBallBandClassName(styles, number)}`}>{number}</span>
+                                        </li>
+                                    ))}
                                 </ul>
-                                {isValidNumber(el?.bnusNo) ? (
+                                {isFiniteNumber(draw.bnusNo) ? (
                                     <>
                                         <span className={styles.plusSymbol}>+</span>
-                                        <span className={`${styles.ball} ${getBallBandClassName(el.bnusNo)}`}>{el.bnusNo}</span>
+                                        <span className={`${styles.ball} ${getLottoBallBandClassName(styles, draw.bnusNo)}`}>{draw.bnusNo}</span>
                                     </>
                                 ) : null}
                             </div>
@@ -220,7 +205,7 @@ export default function HomePage({ fontVariables }: HomePageProps) {
             </section>
 
             {isLoading && (
-                <div className={styles.loadingOverlay} onPointerDown={(e) => e.stopPropagation()}>
+                <div className={styles.loadingOverlay} onPointerDown={(event) => event.stopPropagation()}>
                     <MoonLoader size={70} color="#1ea9bb" />
                 </div>
             )}

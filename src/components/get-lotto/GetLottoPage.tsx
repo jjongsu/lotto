@@ -1,417 +1,45 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import { useMemo, useState } from 'react';
-import type { EChartsOption } from 'echarts';
 import { MoonLoader } from 'react-spinners';
-import type { LottoResponse } from '../../apis/getLotto';
-import useLottoData from '../../hooks/useLottoData';
-import {
-    buildBonusFrequency,
-    buildHighLowStats,
-    buildMainNumberFrequency,
-    buildOddEvenStats,
-    buildSumSeries,
-    toTopNFrequency,
-    type TopFrequencyItem,
-} from '../../utils/get-lotto-stats';
-import { getCurrentLottoRound, getRecentDrawList } from '../../utils/utils';
+import { CHART_STYLE } from './chart-options';
+import { LOOKBACK_OPTIONS, useGetLottoViewModel } from './useGetLottoViewModel';
+import { getLottoBallBandClassName, isFiniteNumber } from '../../utils/lotto-domain';
 import styles from './GetLottoPage.module.css';
 
 const ReactECharts = dynamic(() => import('echarts-for-react'), {
     ssr: false,
 });
 
-type LottoQueryData = Partial<LottoResponse> & { isLoading: boolean };
-type LookbackRange = 30 | 50 | 100;
-
 interface GetLottoPageProps {
     fontVariables: string;
 }
 
-const LOOKBACK_OPTIONS: LookbackRange[] = [30, 50, 100];
-
-const getBallBandClassName = (number: number) => {
-    if (number <= 10) return styles.ballBandYellow;
-    if (number <= 20) return styles.ballBandBlue;
-    if (number <= 30) return styles.ballBandRed;
-    if (number <= 40) return styles.ballBandGray;
-    return styles.ballBandGreen;
-};
-
-const isValidNumber = (value: number | undefined): value is number => {
-    return typeof value === 'number' && Number.isFinite(value);
-};
-
-const createCommonChartOption = (): Pick<EChartsOption, 'backgroundColor' | 'textStyle' | 'animationDuration' | 'animationDurationUpdate'> => {
-    return {
-        backgroundColor: 'transparent',
-        textStyle: {
-            color: '#2f4f6c',
-            fontFamily: 'var(--font-lotto-body), Noto Sans KR, sans-serif',
-            fontSize: 12,
-        },
-        animationDuration: 360,
-        animationDurationUpdate: 220,
-    };
-};
-
-const createBarChartOption = ({
-    data,
-    color,
-    labelPrefix,
-}: {
-    data: TopFrequencyItem[];
-    color: string;
-    labelPrefix: string;
-}): EChartsOption => {
-    const common = createCommonChartOption();
-    const categories = data.map((item) => `${labelPrefix} ${item.number}`);
-
-    return {
-        ...common,
-        grid: { left: 14, right: 14, top: 30, bottom: 18, containLabel: true },
-        tooltip: {
-            trigger: 'axis',
-            axisPointer: { type: 'shadow' },
-            backgroundColor: 'rgba(243, 250, 255, 0.95)',
-            borderColor: 'rgba(126, 172, 204, 0.55)',
-            textStyle: { color: '#1f4060' },
-        },
-        xAxis: {
-            type: 'category',
-            data: categories,
-            axisLabel: {
-                interval: 0,
-                rotate: data.length > 7 ? 24 : 0,
-            },
-            axisLine: {
-                lineStyle: {
-                    color: 'rgba(107, 149, 184, 0.65)',
-                },
-            },
-        },
-        yAxis: {
-            type: 'value',
-            minInterval: 1,
-            splitLine: {
-                lineStyle: {
-                    color: 'rgba(126, 163, 198, 0.24)',
-                },
-            },
-        },
-        series: [
-            {
-                type: 'bar',
-                data: data.map((item) => item.count),
-                barWidth: '58%',
-                itemStyle: {
-                    color,
-                    borderRadius: [7, 7, 2, 2],
-                },
-            },
-        ],
-        media: [
-            {
-                query: { maxWidth: 420 },
-                option: {
-                    grid: { left: 8, right: 10, top: 28, bottom: 18, containLabel: true },
-                    xAxis: {
-                        axisLabel: {
-                            interval: 'auto',
-                            rotate: 32,
-                            fontSize: 10,
-                        },
-                    },
-                    yAxis: {
-                        axisLabel: {
-                            fontSize: 10,
-                        },
-                    },
-                },
-            },
-        ],
-    };
-};
-
-const createPieChartOption = ({
-    data,
-    colors,
-}: {
-    data: Array<{ name: string; value: number }>;
-    colors: string[];
-}): EChartsOption => {
-    const common = createCommonChartOption();
-
-    return {
-        ...common,
-        color: colors,
-        tooltip: {
-            trigger: 'item',
-            backgroundColor: 'rgba(243, 250, 255, 0.95)',
-            borderColor: 'rgba(126, 172, 204, 0.55)',
-            textStyle: { color: '#1f4060' },
-        },
-        legend: {
-            bottom: 4,
-            left: 'center',
-            itemWidth: 10,
-            itemHeight: 10,
-            textStyle: {
-                color: '#35516d',
-                fontSize: 12,
-            },
-        },
-        series: [
-            {
-                type: 'pie',
-                radius: ['45%', '70%'],
-                center: ['50%', '45%'],
-                avoidLabelOverlap: true,
-                label: {
-                    formatter: '{b}\n{d}%',
-                    color: '#2c4c68',
-                    fontSize: 12,
-                },
-                data,
-            },
-        ],
-        media: [
-            {
-                query: { maxWidth: 420 },
-                option: {
-                    legend: {
-                        bottom: -2,
-                        textStyle: {
-                            fontSize: 11,
-                        },
-                    },
-                    series: [
-                        {
-                            center: ['50%', '42%'],
-                            radius: ['42%', '66%'],
-                            label: {
-                                fontSize: 10,
-                            },
-                        },
-                    ],
-                },
-            },
-        ],
-    };
-};
-
-const createLineChartOption = ({
-    draws,
-    sums,
-    average,
-}: {
-    draws: string[];
-    sums: number[];
-    average: number;
-}): EChartsOption => {
-    const common = createCommonChartOption();
-
-    return {
-        ...common,
-        grid: { left: 14, right: 14, top: 36, bottom: 24, containLabel: true },
-        tooltip: {
-            trigger: 'axis',
-            backgroundColor: 'rgba(243, 250, 255, 0.95)',
-            borderColor: 'rgba(126, 172, 204, 0.55)',
-            textStyle: { color: '#1f4060' },
-        },
-        xAxis: {
-            type: 'category',
-            boundaryGap: false,
-            data: draws,
-            axisLine: {
-                lineStyle: {
-                    color: 'rgba(107, 149, 184, 0.65)',
-                },
-            },
-        },
-        yAxis: {
-            type: 'value',
-            splitLine: {
-                lineStyle: {
-                    color: 'rgba(126, 163, 198, 0.24)',
-                },
-            },
-        },
-        series: [
-            {
-                type: 'line',
-                smooth: true,
-                data: sums,
-                showSymbol: false,
-                lineStyle: {
-                    width: 2.2,
-                    color: '#3c9fda',
-                },
-                areaStyle: {
-                    color: 'rgba(113, 201, 233, 0.26)',
-                },
-                markLine: {
-                    silent: true,
-                    symbol: 'none',
-                    lineStyle: {
-                        color: 'rgba(227, 140, 67, 0.85)',
-                        type: 'dashed',
-                    },
-                    data: [{ yAxis: average, name: '평균' }],
-                    label: {
-                        formatter: '평균 {c}',
-                        color: '#7b4f1f',
-                    },
-                },
-            },
-        ],
-        media: [
-            {
-                query: { maxWidth: 420 },
-                option: {
-                    grid: { left: 8, right: 10, top: 30, bottom: 18, containLabel: true },
-                    xAxis: {
-                        axisLabel: {
-                            fontSize: 10,
-                            interval: 'auto',
-                        },
-                    },
-                    yAxis: {
-                        axisLabel: {
-                            fontSize: 10,
-                        },
-                    },
-                },
-            },
-        ],
-    };
-};
-
-const CHART_STYLE = {
-    width: '100%',
-    height: '100%',
-} as const;
-
 export default function GetLottoPage({ fontVariables }: GetLottoPageProps) {
-    const latestRound = useMemo(() => getCurrentLottoRound(), []);
-    const [searchDraw, setSearchDraw] = useState(latestRound);
-    const [inputDraw, setInputDraw] = useState(String(latestRound));
-    const [lookback, setLookback] = useState<LookbackRange>(30);
-
-    const statsRounds = useMemo(() => getRecentDrawList(lookback), [lookback]);
-    const queryRounds = useMemo(
-        () =>
-            Array.from(new Set([searchDraw, ...statsRounds])).sort((a, b) => b - a),
-        [searchDraw, statsRounds],
-    );
-
-    const { data, isError } = useLottoData(queryRounds);
-    const lottoData = data as LottoQueryData[];
-    const isLoading = lottoData.length === 0 || lottoData.some((item) => item.isLoading);
-
-    const statsRoundSet = useMemo(() => new Set(statsRounds), [statsRounds]);
-    const targetDraw = lottoData.find((item) => item?.drwNo === searchDraw);
-
-    const statsSuccessDraws = useMemo(
-        () =>
-            lottoData
-                .filter((item): item is LottoResponse & { isLoading: boolean } => {
-                    return item.returnValue === 'success' && typeof item.drwNo === 'number' && statsRoundSet.has(item.drwNo);
-                })
-                .sort((a, b) => b.drwNo - a.drwNo),
-        [lottoData, statsRoundSet],
-    );
-
-    const warningMessage = useMemo(() => {
-        if (isLoading) return '';
-        if (isError) return '일부 회차 데이터를 불러오지 못해 통계 정확도가 낮을 수 있습니다.';
-        if (statsSuccessDraws.length === 0) return '통계를 계산할 성공 회차 데이터가 없습니다.';
-        if (statsSuccessDraws.length < lookback) {
-            return `최근 ${lookback}회 중 ${statsSuccessDraws.length}회 데이터로 통계를 계산했습니다.`;
-        }
-        return '';
-    }, [isError, isLoading, lookback, statsSuccessDraws.length]);
-
-    const targetMainNumbers = useMemo(() => {
-        if (!targetDraw || targetDraw.returnValue !== 'success') return [];
-        return [targetDraw.drwtNo1, targetDraw.drwtNo2, targetDraw.drwtNo3, targetDraw.drwtNo4, targetDraw.drwtNo5, targetDraw.drwtNo6].filter(isValidNumber);
-    }, [targetDraw]);
-
-    const mainTop10 = useMemo(() => toTopNFrequency(buildMainNumberFrequency(statsSuccessDraws), 10), [statsSuccessDraws]);
-    const bonusTop10 = useMemo(() => toTopNFrequency(buildBonusFrequency(statsSuccessDraws), 10), [statsSuccessDraws]);
-    const oddEvenStats = useMemo(() => buildOddEvenStats(statsSuccessDraws), [statsSuccessDraws]);
-    const highLowStats = useMemo(() => buildHighLowStats(statsSuccessDraws), [statsSuccessDraws]);
-    const sumStats = useMemo(() => buildSumSeries(statsSuccessDraws), [statsSuccessDraws]);
-
-    const hasStatsData = statsSuccessDraws.length > 0;
-
-    const mainFrequencyOption = useMemo(
-        () =>
-            createBarChartOption({
-                data: mainTop10,
-                color: '#3ea3de',
-                labelPrefix: 'No.',
-            }),
-        [mainTop10],
-    );
-
-    const bonusFrequencyOption = useMemo(
-        () =>
-            createBarChartOption({
-                data: bonusTop10,
-                color: '#57be8d',
-                labelPrefix: 'B.',
-            }),
-        [bonusTop10],
-    );
-
-    const oddEvenOption = useMemo(
-        () =>
-            createPieChartOption({
-                data: [
-                    { name: '홀수', value: oddEvenStats.odd },
-                    { name: '짝수', value: oddEvenStats.even },
-                ],
-                colors: ['#43abd9', '#f29f66'],
-            }),
-        [oddEvenStats.even, oddEvenStats.odd],
-    );
-
-    const highLowOption = useMemo(
-        () =>
-            createPieChartOption({
-                data: [
-                    { name: '저(1~22)', value: highLowStats.low },
-                    { name: '고(23~45)', value: highLowStats.high },
-                ],
-                colors: ['#71c7ec', '#4eb183'],
-            }),
-        [highLowStats.high, highLowStats.low],
-    );
-
-    const sumLineOption = useMemo(
-        () =>
-            createLineChartOption({
-                draws: sumStats.series.map((item) => `${item.drawNo}회`),
-                sums: sumStats.series.map((item) => item.sum),
-                average: sumStats.average,
-            }),
-        [sumStats.average, sumStats.series],
-    );
-
-    const updateSearchDraw = (next: number) => {
-        const normalized = Math.min(latestRound, Math.max(1, Math.floor(next)));
-        setSearchDraw(normalized);
-        setInputDraw(String(normalized));
-    };
-
-    const handleSearch = () => {
-        const next = Number(inputDraw);
-        if (!Number.isFinite(next) || next <= 0) return;
-        updateSearchDraw(next);
-    };
+    const {
+        latestRound,
+        searchDraw,
+        inputDraw,
+        lookback,
+        isLoading,
+        warningMessage,
+        targetDraw,
+        targetMainNumbers,
+        statsSuccessDraws,
+        hasStatsData,
+        oddEvenStats,
+        highLowStats,
+        sumStats,
+        mainFrequencyOption,
+        bonusFrequencyOption,
+        oddEvenOption,
+        highLowOption,
+        sumLineOption,
+        handleInputDrawChange,
+        handleLookbackChange,
+        updateSearchDraw,
+        handleSearch,
+    } = useGetLottoViewModel();
 
     return (
         <main className={`${styles.page} ${fontVariables}`}>
@@ -441,7 +69,7 @@ export default function GetLottoPage({ fontVariables }: GetLottoPageProps) {
                             min={1}
                             value={inputDraw}
                             placeholder="회차 입력"
-                            onChange={(event) => setInputDraw(event.target.value)}
+                            onChange={(event) => handleInputDrawChange(event.target.value)}
                             className={styles.searchInput}
                         />
                         <button type="submit" className={styles.searchButton}>
@@ -495,7 +123,7 @@ export default function GetLottoPage({ fontVariables }: GetLottoPageProps) {
                             key={option}
                             type="button"
                             className={`${styles.rangeButton} ${lookback === option ? styles.rangeButtonActive : ''}`}
-                            onClick={() => setLookback(option)}
+                            onClick={() => handleLookbackChange(option)}
                             aria-pressed={lookback === option}
                         >
                             최근 {option}회
@@ -536,14 +164,14 @@ export default function GetLottoPage({ fontVariables }: GetLottoPageProps) {
                                 <ul className={styles.ballRow}>
                                     {targetMainNumbers.map((number) => (
                                         <li key={`target-${targetDraw.drwNo}-${number}`} className={styles.ballItem}>
-                                            <span className={`${styles.ball} ${getBallBandClassName(number)}`}>{number}</span>
+                                            <span className={`${styles.ball} ${getLottoBallBandClassName(styles, number)}`}>{number}</span>
                                         </li>
                                     ))}
                                 </ul>
-                                {isValidNumber(targetDraw.bnusNo) ? (
+                                {isFiniteNumber(targetDraw.bnusNo) ? (
                                     <>
                                         <span className={styles.plusSymbol}>+</span>
-                                        <span className={`${styles.ball} ${getBallBandClassName(targetDraw.bnusNo)}`}>{targetDraw.bnusNo}</span>
+                                        <span className={`${styles.ball} ${getLottoBallBandClassName(styles, targetDraw.bnusNo)}`}>{targetDraw.bnusNo}</span>
                                     </>
                                 ) : null}
                             </div>

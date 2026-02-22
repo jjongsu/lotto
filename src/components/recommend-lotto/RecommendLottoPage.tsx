@@ -1,56 +1,35 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import type { LottoResponse } from '../../apis/getLotto';
 import useLottoData from '../../hooks/useLottoData';
-import { buildFrequencyMap, type FrequencyMap, generateWeightedSets } from '../../utils/recommend-lotto';
+import { isLottoSuccessQueryData } from '../../types/lotto';
+import { createEmptyFrequencyMap, getLottoBallBandClassName, toSortedFrequencyItems } from '../../utils/lotto-domain';
+import { buildFrequencyMap, generateWeightedSets } from '../../utils/recommend-lotto';
 import { getRecentDrawList } from '../../utils/utils';
 import styles from './RecommendLottoPage.module.css';
 
 const LOOKBACK_ROUNDS = 30;
 const RECOMMEND_SET_COUNT = 5;
 
-type LottoQueryData = Partial<LottoResponse> & { isLoading: boolean };
-
 interface RecommendLottoPageProps {
     fontVariables: string;
 }
 
-const createEmptyFrequencyMap = (): FrequencyMap => {
-    const map: FrequencyMap = {};
-    for (let number = 1; number <= 45; number++) {
-        map[number] = 0;
-    }
-    return map;
-};
-
-const getBallBandClassName = (number: number) => {
-    if (number <= 10) return styles.ballBandYellow;
-    if (number <= 20) return styles.ballBandBlue;
-    if (number <= 30) return styles.ballBandRed;
-    if (number <= 40) return styles.ballBandGray;
-    return styles.ballBandGreen;
-};
-
 export default function RecommendLottoPage({ fontVariables }: RecommendLottoPageProps) {
     const [refreshKey, setRefreshKey] = useState(0);
     const recentDrawList = useMemo(() => getRecentDrawList(LOOKBACK_ROUNDS), []);
-    const { data, isError } = useLottoData(recentDrawList);
-    const lottoData = data as LottoQueryData[];
+    const { data: lottoData, isError } = useLottoData(recentDrawList);
     const isLoading = lottoData.length === 0 || lottoData.some((item) => item.isLoading);
 
-    const successfulDraws = useMemo(
-        () =>
-            lottoData.filter((item): item is LottoResponse & { isLoading: boolean } => {
-                return item.returnValue === 'success';
-            }),
-        [lottoData],
-    );
+    const successfulDraws = useMemo(() => {
+        return lottoData.filter(isLottoSuccessQueryData);
+    }, [lottoData]);
 
     const frequencyMap = useMemo(() => {
         if (successfulDraws.length === 0) {
             return createEmptyFrequencyMap();
         }
+
         return buildFrequencyMap(successfulDraws);
     }, [successfulDraws]);
 
@@ -65,10 +44,7 @@ export default function RecommendLottoPage({ fontVariables }: RecommendLottoPage
     }, [frequencyMap, refreshKey]);
 
     const topFrequencyNumbers = useMemo(() => {
-        return Object.entries(frequencyMap)
-            .map(([number, count]) => ({ number: Number(number), count }))
-            .sort((a, b) => b.count - a.count || a.number - b.number)
-            .slice(0, 10);
+        return toSortedFrequencyItems(frequencyMap).slice(0, 10);
     }, [frequencyMap]);
 
     const drawRange = useMemo(() => {
@@ -170,7 +146,7 @@ export default function RecommendLottoPage({ fontVariables }: RecommendLottoPage
                                   <ul className={styles.ballRow}>
                                       {numbers.map((number) => (
                                           <li key={`${index}-${number}`} className={styles.ballItem}>
-                                              <span className={`${styles.ball} ${getBallBandClassName(number)}`}>{number}</span>
+                                              <span className={`${styles.ball} ${getLottoBallBandClassName(styles, number)}`}>{number}</span>
                                           </li>
                                       ))}
                                   </ul>
@@ -189,7 +165,7 @@ export default function RecommendLottoPage({ fontVariables }: RecommendLottoPage
                 <div className={styles.frequencyGrid}>
                     {topFrequencyNumbers.map(({ number, count }) => (
                         <div key={`freq-${number}`} className={styles.frequencyCell}>
-                            <span className={`${styles.ball} ${getBallBandClassName(number)}`}>{number}</span>
+                            <span className={`${styles.ball} ${getLottoBallBandClassName(styles, number)}`}>{number}</span>
                             <span className={styles.frequencyCount}>{count}회</span>
                         </div>
                     ))}

@@ -1,5 +1,4 @@
 import { Noto_Sans_KR, Orbitron } from 'next/font/google';
-import RecommendLottoPage from '../../components/recommend-lotto/RecommendLottoPage';
 
 const orbitron = Orbitron({
     subsets: ['latin'],
@@ -15,6 +14,4 @@ const notoSansKr = Noto_Sans_KR({
     variable: '--font-lotto-body',
 });
 
-export default function Page() {
-    return <RecommendLottoPage fontVariables={`${orbitron.variable} ${notoSansKr.variable}`} />;
-}
+export const fontVariables = `${orbitron.variable} ${notoSansKr.variable}`;

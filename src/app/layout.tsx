@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from 'next';
-import Script from 'next/script';
 import AppNavigation from '../components/navigation/AppNavigation';
 import './globals.css';
 import Providers from './providers';
@@ -17,25 +16,27 @@ export const viewport: Viewport = {
 };
 
 const THEME_INITIALIZER_SCRIPT = `(function(){try{var stored=localStorage.getItem('${THEME_STORAGE_KEY}');var mode='light';if(stored==='dark'){mode='dark';}else if(stored==='system'){mode=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}var root=document.documentElement;root.setAttribute('data-theme',mode);root.classList.toggle('dark',mode==='dark');root.style.colorScheme=mode;var themeColor=mode==='dark'?'${THEME_COLOR_DARK}':'${THEME_COLOR_LIGHT}';var tags=document.querySelectorAll('meta[name="theme-color"]');if(!tags.length){var meta=document.createElement('meta');meta.setAttribute('name','theme-color');meta.setAttribute('content',themeColor);document.head.appendChild(meta);}else{tags.forEach(function(tag){tag.setAttribute('content',themeColor);tag.removeAttribute('media');});}}catch(error){}})();`;
+const SHOULD_LOAD_ADSENSE =
+    process.env.NODE_ENV === 'production' || process.env.NEXT_PUBLIC_ENABLE_ADSENSE_IN_DEV === 'true';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
         <html lang="ko" suppressHydrationWarning data-theme="light">
             <head>
                 <script dangerouslySetInnerHTML={{ __html: THEME_INITIALIZER_SCRIPT }} />
+                {SHOULD_LOAD_ADSENSE ? (
+                    <script
+                        async
+                        src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${GOOGLE_ADSENSE_CLIENT}`}
+                        crossOrigin="anonymous"
+                    />
+                ) : null}
             </head>
             <body>
                 <Providers>
                     <AppNavigation />
                     <div className="appContent">{children}</div>
                 </Providers>
-                <Script
-                    id="google-adsense-loader"
-                    async
-                    strategy="afterInteractive"
-                    src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${GOOGLE_ADSENSE_CLIENT}`}
-                    crossOrigin="anonymous"
-                />
             </body>
         </html>
     );

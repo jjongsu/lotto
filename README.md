@@ -24,11 +24,12 @@ Next.js(App Router) 기반 로또(6/45) 조회 대시보드입니다.
 1. `npm run dev` 실행
 2. `view-source:http://localhost:3000`에서 아래 메타 태그 확인
    - `<meta name="google-adsense-account" content="ca-pub-3984267493776789">`
-3. `view-source:http://localhost:3000` 또는 DevTools Elements에서 AdSense 스크립트 확인
+3. 로컬에서 AdSense 스크립트 확인이 필요하면 `.env`에 `NEXT_PUBLIC_ENABLE_ADSENSE_IN_DEV=true` 설정 후 개발 서버 재시작
+4. `view-source:http://localhost:3000` 또는 DevTools Elements에서 AdSense 스크립트 확인
    - `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3984267493776789`
-4. `http://localhost:3000/ads.txt` 접속 시 아래 1줄이 그대로 출력되는지 확인
+5. `http://localhost:3000/ads.txt` 접속 시 아래 1줄이 그대로 출력되는지 확인
    - `google.com, pub-3984267493776789, DIRECT, f08c47fec0942fa0`
-5. AdSense client 변경이 필요하면 `src/app/seo.ts`의 `GOOGLE_ADSENSE_CLIENT` 상수를 수정
+6. AdSense client 변경이 필요하면 `src/app/seo.ts`의 `GOOGLE_ADSENSE_CLIENT` 상수를 수정
 
 ## Production URL Checklist (AdSense)
 

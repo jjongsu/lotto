@@ -15,9 +15,10 @@ const parseSiteUrl = (value?: string): string => {
     }
 };
 
-const SITE_URL = parseSiteUrl(process.env.NEXT_PUBLIC_SITE_URL?.trim());
+export const SITE_URL = parseSiteUrl(process.env.NEXT_PUBLIC_SITE_URL?.trim());
 const GOOGLE_SITE_VERIFICATION = process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION?.trim();
 const NAVER_SITE_VERIFICATION = process.env.NEXT_PUBLIC_NAVER_SITE_VERIFICATION?.trim();
+export const GOOGLE_ADSENSE_CLIENT = 'ca-pub-3984267493776789';
 
 const ROOT_VERIFICATION: Metadata['verification'] = {
     ...(GOOGLE_SITE_VERIFICATION ? { google: GOOGLE_SITE_VERIFICATION } : {}),
@@ -102,6 +103,9 @@ export const ROOT_METADATA: Metadata = {
         telephone: false,
         address: false,
         email: false,
+    },
+    other: {
+        'google-adsense-account': GOOGLE_ADSENSE_CLIENT,
     },
     ...(Object.keys(ROOT_VERIFICATION).length > 0 ? { verification: ROOT_VERIFICATION } : {}),
 };

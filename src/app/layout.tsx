@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import AppNavigation from '../components/navigation/AppNavigation';
 import './globals.css';
 import Providers from './providers';
-import { ROOT_METADATA } from './seo';
+import { GOOGLE_ADSENSE_CLIENT, ROOT_METADATA } from './seo';
 import { THEME_COLOR_DARK, THEME_COLOR_LIGHT, THEME_STORAGE_KEY } from '../theme/theme.constants';
 
 export const metadata: Metadata = ROOT_METADATA;
@@ -22,6 +22,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <html lang="ko" suppressHydrationWarning data-theme="light">
             <head>
                 <script dangerouslySetInnerHTML={{ __html: THEME_INITIALIZER_SCRIPT }} />
+                <script
+                    async
+                    src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${GOOGLE_ADSENSE_CLIENT}`}
+                    crossOrigin="anonymous"
+                />
             </head>
             <body>
                 <Providers>

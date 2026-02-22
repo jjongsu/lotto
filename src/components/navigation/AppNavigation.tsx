@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { MOBILE_NAV_MENU_ID, NAV_ITEMS } from './navigation.constants';
 import useNavigationState from './useNavigationState';
+import ThemeModeSwitch from './ThemeModeSwitch';
 import styles from './AppNavigation.module.css';
 
 const getNavItemClassName = (pathname: string, href: string, baseClass: string, activeClass: string) => {
@@ -23,30 +24,34 @@ export default function AppNavigation() {
                         <span className={styles.srOnly}>LOTTO DASHBOARD 홈으로 이동</span>
                     </Link>
 
-                    <nav className={styles.desktopNav} aria-label="주요 메뉴">
-                        <ul className={styles.navList}>
-                            {NAV_ITEMS.map((item) => (
-                                <li key={item.href}>
-                                    <Link href={item.href} className={getNavItemClassName(pathname, item.href, styles.navLink, styles.navLinkActive)}>
-                                        {item.label}
-                                    </Link>
-                                </li>
-                            ))}
-                        </ul>
-                    </nav>
+                    <div className={styles.headerActions}>
+                        <nav className={styles.desktopNav} aria-label="주요 메뉴">
+                            <ul className={styles.navList}>
+                                {NAV_ITEMS.map((item) => (
+                                    <li key={item.href}>
+                                        <Link href={item.href} className={getNavItemClassName(pathname, item.href, styles.navLink, styles.navLinkActive)}>
+                                            {item.label}
+                                        </Link>
+                                    </li>
+                                ))}
+                            </ul>
+                        </nav>
 
-                    <button
-                        type="button"
-                        className={`${styles.menuButton} ${isMenuOpen ? styles.menuButtonOpen : ''}`}
-                        onClick={toggleMenu}
-                        aria-label={isMenuOpen ? '메뉴 닫기' : '메뉴 열기'}
-                        aria-expanded={isMenuOpen}
-                        aria-controls={MOBILE_NAV_MENU_ID}
-                    >
-                        <span className={styles.menuLine} aria-hidden />
-                        <span className={styles.menuLine} aria-hidden />
-                        <span className={styles.menuLine} aria-hidden />
-                    </button>
+                        <ThemeModeSwitch className={styles.desktopThemeSwitch} />
+
+                        <button
+                            type="button"
+                            className={`${styles.menuButton} ${isMenuOpen ? styles.menuButtonOpen : ''}`}
+                            onClick={toggleMenu}
+                            aria-label={isMenuOpen ? '메뉴 닫기' : '메뉴 열기'}
+                            aria-expanded={isMenuOpen}
+                            aria-controls={MOBILE_NAV_MENU_ID}
+                        >
+                            <span className={styles.menuLine} aria-hidden />
+                            <span className={styles.menuLine} aria-hidden />
+                            <span className={styles.menuLine} aria-hidden />
+                        </button>
+                    </div>
                 </div>
             </header>
 
@@ -57,6 +62,10 @@ export default function AppNavigation() {
                     aria-label="모바일 메뉴"
                     onClick={(event) => event.stopPropagation()}
                 >
+                    <div className={styles.mobilePanelHeader}>
+                        <ThemeModeSwitch className={styles.mobileThemeSwitch} />
+                    </div>
+
                     <nav aria-label="모바일 주요 메뉴">
                         <ul className={styles.mobileNavList}>
                             {NAV_ITEMS.map((item) => (

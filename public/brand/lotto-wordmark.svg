@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 104" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 476 104" role="img" aria-labelledby="title desc">
     <title id="title">Lotto Dashboard wordmark</title>
     <desc id="desc">Symbol mark with three lotto balls and LOTTO DASHBOARD wordmark</desc>
     <defs>
@@ -40,7 +40,7 @@
     </g>
 
     <g>
-        <path d="M116 26h292" stroke="#7ec8dc" stroke-opacity="0.6" stroke-width="2.2" stroke-linecap="round" />
+        <path d="M116 26h336" stroke="#7ec8dc" stroke-opacity="0.6" stroke-width="2.2" stroke-linecap="round" />
         <text x="116" y="57" fill="url(#wordmarkFill)" font-size="30" font-weight="800" letter-spacing="2.2" font-family="'Avenir Next','Segoe UI',Arial,sans-serif">
             LOTTO DASHBOARD
         </text>

@@ -1,11 +1,41 @@
 .page {
-    --dashboard-bg: #f3f9ff;
-    --panel-bg: rgb(255 255 255 / 78%);
-    --panel-border: rgb(102 150 196 / 32%);
-    --text-main: #17324f;
-    --text-muted: #5e7791;
-    --accent-cyan: #1ea9bb;
-    --accent-orange: #e08a3d;
+    --panel-bg: var(--app-panel-bg);
+    --panel-border: var(--app-panel-border);
+    --text-main: var(--app-text-main);
+    --text-heading: var(--app-text-heading);
+    --text-strong: var(--app-text-strong);
+    --text-muted: var(--app-text-muted);
+    --text-soft: var(--app-text-soft);
+    --accent-cyan: var(--app-accent-cyan);
+
+    --card-bg: var(--app-card-bg);
+    --card-border: var(--app-card-border);
+    --card-shadow: var(--app-card-shadow);
+    --card-hover-border: var(--app-card-hover-border);
+    --card-hover-shadow: var(--app-card-hover-shadow);
+    --card-inset: var(--app-card-inset);
+    --card-overlay: var(--app-card-overlay);
+
+    --pill-border: var(--app-pill-border);
+    --pill-bg: var(--app-pill-bg);
+    --pill-text: var(--app-pill-text);
+
+    --input-border: var(--app-input-border);
+    --input-bg: var(--app-input-bg);
+    --input-text: var(--app-input-text);
+
+    --button-border: var(--app-button-primary-border);
+    --button-bg: var(--app-button-primary-bg);
+    --button-text: var(--app-button-primary-text);
+    --button-shadow: var(--app-button-shadow);
+    --button-inset: var(--app-button-inset);
+
+    --empty-border: var(--app-empty-border);
+    --empty-bg: var(--app-empty-bg);
+    --empty-text: var(--app-empty-text);
+
+    --focus-ring: var(--app-focus-ring);
+    --overlay-bg: var(--app-overlay);
 
     position: relative;
     min-height: 100dvh;
@@ -14,9 +44,9 @@
     color: var(--text-main);
     font-family: var(--font-lotto-body), 'Noto Sans KR', sans-serif;
     background:
-        radial-gradient(120% 95% at 12% 5%, rgb(161 219 255 / 48%) 0%, transparent 44%),
-        radial-gradient(96% 76% at 92% 0%, rgb(177 245 232 / 42%) 0%, transparent 55%),
-        linear-gradient(160deg, #f6fbff 0%, #edf5ff 52%, #eaf3ff 100%);
+        radial-gradient(120% 95% at 12% 5%, var(--app-bg-radial-primary) 0%, transparent 44%),
+        radial-gradient(96% 76% at 92% 0%, var(--app-bg-radial-secondary) 0%, transparent 55%),
+        linear-gradient(160deg, var(--app-bg-linear-start) 0%, var(--app-bg-linear-mid) 52%, var(--app-bg-linear-end) 100%);
 }
 
 .page::before,
@@ -31,7 +61,7 @@
     width: 22rem;
     height: 22rem;
     border-radius: 999px;
-    background: radial-gradient(circle, rgb(110 207 214 / 26%) 0%, rgb(110 207 214 / 0%) 72%);
+    background: radial-gradient(circle, var(--app-spot-primary) 0%, rgb(110 207 214 / 0%) 72%);
     filter: blur(4px);
 }
 
@@ -41,7 +71,7 @@
     width: 20rem;
     height: 20rem;
     border-radius: 999px;
-    background: radial-gradient(circle, rgb(243 179 118 / 22%) 0%, rgb(243 179 118 / 0%) 74%);
+    background: radial-gradient(circle, var(--app-spot-secondary) 0%, rgb(243 179 118 / 0%) 74%);
 }
 
 .backdropGrid {
@@ -50,8 +80,8 @@
     pointer-events: none;
     opacity: 0.18;
     background-image:
-        linear-gradient(to right, rgb(126 163 198 / 18%) 1px, transparent 1px),
-        linear-gradient(to bottom, rgb(126 163 198 / 18%) 1px, transparent 1px);
+        linear-gradient(to right, var(--app-grid-line) 1px, transparent 1px),
+        linear-gradient(to bottom, var(--app-grid-line) 1px, transparent 1px);
     background-size: 52px 52px;
     mask-image: radial-gradient(circle at center, rgb(0 0 0 / 100%) 20%, rgb(0 0 0 / 0%) 90%);
 }
@@ -67,8 +97,8 @@
     border-radius: 1.25rem;
     backdrop-filter: blur(9px);
     box-shadow:
-        0 1px 0 rgb(255 255 255 / 88%) inset,
-        0 10px 24px rgb(117 151 185 / 20%);
+        0 1px 0 var(--app-panel-highlight) inset,
+        0 10px 24px var(--app-panel-shadow);
 }
 
 .hudPanel {
@@ -92,7 +122,7 @@
 
 .title {
     margin: 0;
-    color: #173a5e;
+    color: var(--text-heading);
     font-family: var(--font-lotto-display), 'Orbitron', sans-serif;
     letter-spacing: 0.04em;
     line-height: 1.06;
@@ -116,12 +146,12 @@
     flex-direction: column;
     gap: 0.42rem;
     min-height: 7.6rem;
-    border: 1px solid rgb(109 166 206 / 42%);
+    border: 1px solid var(--card-border);
     border-radius: 1rem;
     background:
-        linear-gradient(180deg, rgb(255 255 255 / 92%) 0%, rgb(244 250 255 / 86%) 100%),
-        linear-gradient(105deg, rgb(88 197 188 / 11%) 0%, transparent 65%);
-    box-shadow: 0 7px 18px rgb(120 154 190 / 18%);
+        var(--card-bg),
+        linear-gradient(105deg, var(--card-overlay) 0%, transparent 65%);
+    box-shadow: 0 7px 18px var(--card-shadow);
     text-decoration: none;
     color: inherit;
     padding: 0.84rem 0.95rem;
@@ -130,31 +160,31 @@
 
 .quickLinkCard:hover {
     transform: translateY(-2px);
-    border-color: rgb(85 176 199 / 56%);
+    border-color: var(--card-hover-border);
     box-shadow:
-        0 11px 20px rgb(80 160 190 / 19%),
-        0 0 0 1px rgb(240 253 255 / 85%) inset;
+        0 11px 20px var(--card-hover-shadow),
+        0 0 0 1px var(--card-inset) inset;
 }
 
 .quickLinkCard:focus-visible {
-    outline: 2px solid var(--accent-cyan);
+    outline: 2px solid var(--focus-ring);
     outline-offset: 2px;
 }
 
 .quickLinkLabel {
     display: inline-flex;
     align-self: flex-start;
-    border: 1px solid rgb(101 170 187 / 44%);
+    border: 1px solid var(--pill-border);
     border-radius: 999px;
-    background: rgb(223 247 250 / 80%);
-    color: #19486a;
+    background: var(--pill-bg);
+    color: var(--pill-text);
     font-size: 0.71rem;
     letter-spacing: 0.04em;
     padding: 0.2rem 0.55rem;
 }
 
 .quickLinkTitle {
-    color: #173f61;
+    color: var(--text-strong);
     font-family: var(--font-lotto-display), 'Orbitron', sans-serif;
     font-size: 1rem;
     letter-spacing: 0.02em;
@@ -175,8 +205,8 @@
 }
 
 .statusItem {
-    border: 1px solid rgb(130 169 207 / 32%);
-    background: linear-gradient(180deg, rgb(255 255 255 / 84%) 0%, rgb(242 249 255 / 82%) 100%);
+    border: 1px solid var(--empty-border);
+    background: var(--empty-bg);
     border-radius: 0.9rem;
     padding: 0.8rem 0.95rem;
 }
@@ -189,7 +219,7 @@
 }
 
 .statusValue {
-    color: #173d61;
+    color: var(--text-strong);
     font-size: 0.98rem;
     letter-spacing: 0.02em;
 }
@@ -211,7 +241,7 @@
 
 .sectionTitle {
     margin: 0;
-    color: #194061;
+    color: var(--text-strong);
     font-size: 1.2rem;
     font-family: var(--font-lotto-display), 'Orbitron', sans-serif;
     letter-spacing: 0.03em;
@@ -234,24 +264,24 @@
     flex: 1;
     min-width: 170px;
     min-height: 2.85rem;
-    border: 1px solid rgb(117 166 205 / 44%);
+    border: 1px solid var(--input-border);
     border-radius: 0.8rem;
-    background: rgb(255 255 255 / 90%);
-    color: #17324f;
+    background: var(--input-bg);
+    color: var(--input-text);
     padding: 0.55rem 0.82rem;
     font-size: 0.95rem;
 }
 
 .searchInput:focus-visible {
-    outline: 2px solid var(--accent-cyan);
+    outline: 2px solid var(--focus-ring);
     outline-offset: 1px;
 }
 
 .searchButton {
-    border: 1px solid rgb(91 196 186 / 64%);
+    border: 1px solid var(--button-border);
     border-radius: 0.75rem;
-    background: linear-gradient(120deg, #c9f5ef 0%, #a9ece3 52%, #90ddd4 100%);
-    color: #0f2f47;
+    background: var(--button-bg);
+    color: var(--button-text);
     min-height: 2.85rem;
     padding: 0.55rem 1.05rem;
     font-family: var(--font-lotto-display), 'Orbitron', sans-serif;
@@ -264,26 +294,26 @@
 .searchButton:hover {
     transform: translateY(-1px);
     box-shadow:
-        0 7px 16px rgb(71 179 167 / 20%),
-        0 0 0 1px rgb(237 255 252 / 84%) inset;
+        0 7px 16px var(--button-shadow),
+        0 0 0 1px var(--button-inset) inset;
     filter: saturate(106%);
 }
 
 .searchButton:focus-visible {
-    outline: 2px solid var(--accent-cyan);
+    outline: 2px solid var(--focus-ring);
     outline-offset: 2px;
 }
 
 .resultCard,
 .recentCard {
     margin-top: 0.95rem;
-    border: 1px solid rgb(115 166 207 / 32%);
+    border: 1px solid var(--card-border);
     border-radius: 1rem;
     padding: 0.82rem;
     background:
-        linear-gradient(180deg, rgb(255 255 255 / 92%) 0%, rgb(244 250 255 / 90%) 100%),
-        linear-gradient(90deg, rgb(61 178 177 / 7%) 0%, transparent 64%);
-    box-shadow: 0 6px 16px rgb(120 154 190 / 18%);
+        var(--card-bg),
+        linear-gradient(90deg, var(--card-overlay) 0%, transparent 64%);
+    box-shadow: 0 6px 16px var(--card-shadow);
 }
 
 .resultHeader,
@@ -297,7 +327,7 @@
 
 .resultRound,
 .recentRound {
-    color: #173f61;
+    color: var(--text-strong);
     font-family: var(--font-lotto-display), 'Orbitron', sans-serif;
     font-size: 1rem;
     letter-spacing: 0.02em;
@@ -305,10 +335,10 @@
 
 .resultDate,
 .recentDate {
-    border: 1px solid rgb(101 170 187 / 44%);
+    border: 1px solid var(--pill-border);
     border-radius: 999px;
-    background: rgb(223 247 250 / 80%);
-    color: #19486a;
+    background: var(--pill-bg);
+    color: var(--pill-text);
     font-size: 0.74rem;
     padding: 0.22rem 0.58rem;
 }
@@ -316,7 +346,7 @@
 .resultStats,
 .recentStats {
     margin-top: 0.62rem;
-    color: #2a4966;
+    color: var(--text-soft);
     font-size: 0.89rem;
 }
 
@@ -356,8 +386,8 @@
     justify-content: center;
     font-weight: 700;
     font-size: 0.86rem;
-    border: 1px solid rgb(23 62 95 / 22%);
-    box-shadow: 0 3px 8px rgb(88 121 154 / 18%);
+    border: 1px solid var(--panel-border);
+    box-shadow: 0 3px 8px var(--card-shadow);
 }
 
 .ballBandYellow {
@@ -386,16 +416,16 @@
 }
 
 .plusSymbol {
-    color: #3e5b77;
+    color: var(--text-soft);
     font-size: 1rem;
     font-weight: 700;
 }
 
 .emptyState {
     margin: 0.95rem 0 0;
-    border: 1px solid rgb(130 169 207 / 32%);
-    background: linear-gradient(180deg, rgb(255 255 255 / 84%) 0%, rgb(242 249 255 / 82%) 100%);
-    color: #45607b;
+    border: 1px solid var(--empty-border);
+    background: var(--empty-bg);
+    color: var(--empty-text);
     border-radius: 0.9rem;
     padding: 0.85rem 0.92rem;
     font-size: 0.9rem;
@@ -421,7 +451,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgb(18 44 68 / 24%);
+    background: var(--overlay-bg);
     backdrop-filter: blur(2px);
 }
 

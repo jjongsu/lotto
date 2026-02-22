@@ -2,6 +2,204 @@
 
 :root {
     --app-nav-height: 68px;
+
+    --app-body-bg: #eaf3ff;
+    --app-bg-radial-primary: rgb(161 219 255 / 48%);
+    --app-bg-radial-secondary: rgb(177 245 232 / 42%);
+    --app-bg-linear-start: #f6fbff;
+    --app-bg-linear-mid: #edf5ff;
+    --app-bg-linear-end: #eaf3ff;
+    --app-spot-primary: rgb(110 207 214 / 26%);
+    --app-spot-secondary: rgb(243 179 118 / 22%);
+    --app-grid-line: rgb(126 163 198 / 18%);
+
+    --app-panel-bg: rgb(255 255 255 / 78%);
+    --app-panel-border: rgb(102 150 196 / 32%);
+    --app-panel-shadow: rgb(117 151 185 / 20%);
+    --app-panel-highlight: rgb(255 255 255 / 88%);
+
+    --app-card-bg: linear-gradient(180deg, rgb(255 255 255 / 92%) 0%, rgb(244 250 255 / 90%) 100%);
+    --app-card-border: rgb(115 166 207 / 32%);
+    --app-card-shadow: rgb(120 154 190 / 18%);
+    --app-card-overlay: rgb(61 178 177 / 7%);
+    --app-card-hover-shadow: rgb(80 160 190 / 19%);
+    --app-card-hover-border: rgb(85 176 199 / 56%);
+    --app-card-inset: rgb(240 253 255 / 85%);
+
+    --app-skeleton-start: rgb(209 228 246 / 85%);
+    --app-skeleton-mid: rgb(239 247 255 / 96%);
+    --app-skeleton-end: rgb(209 228 246 / 85%);
+
+    --app-text-main: #17324f;
+    --app-text-heading: #173a5e;
+    --app-text-strong: #173f61;
+    --app-text-muted: #5e7791;
+    --app-text-soft: #45607b;
+
+    --app-pill-border: rgb(101 170 187 / 44%);
+    --app-pill-bg: rgb(223 247 250 / 80%);
+    --app-pill-text: #19486a;
+
+    --app-input-bg: rgb(255 255 255 / 90%);
+    --app-input-border: rgb(117 166 205 / 44%);
+    --app-input-text: #17324f;
+
+    --app-button-primary-bg: linear-gradient(120deg, #c9f5ef 0%, #a9ece3 52%, #90ddd4 100%);
+    --app-button-primary-border: rgb(91 196 186 / 64%);
+    --app-button-primary-text: #0f2f47;
+    --app-button-secondary-bg: linear-gradient(180deg, rgb(255 255 255 / 92%) 0%, rgb(244 250 255 / 90%) 100%);
+    --app-button-secondary-border: rgb(110 164 205 / 46%);
+    --app-button-secondary-text: #173f61;
+    --app-button-shadow: rgb(71 179 167 / 20%);
+    --app-button-inset: rgb(237 255 252 / 84%);
+
+    --app-warning-bg: rgb(255 242 217 / 88%);
+    --app-warning-border: rgb(242 197 118 / 52%);
+    --app-warning-text: #7a4f1c;
+
+    --app-empty-bg: linear-gradient(180deg, rgb(255 255 255 / 84%) 0%, rgb(242 249 255 / 82%) 100%);
+    --app-empty-border: rgb(130 169 207 / 32%);
+    --app-empty-text: #45607b;
+
+    --app-overlay: rgb(18 44 68 / 24%);
+    --app-overlay-strong: rgb(17 39 58 / 34%);
+
+    --app-focus-ring: #1ea9bb;
+    --app-accent-cyan: #1ea9bb;
+    --app-accent-orange: #e08a3d;
+    --app-accent-mint: #4fcf9d;
+
+    --app-nav-bg: rgb(244 250 255 / 82%);
+    --app-nav-bg-end: rgb(240 248 255 / 78%);
+    --app-nav-border: rgb(102 150 196 / 36%);
+    --app-nav-shadow: rgb(82 118 154 / 18%);
+    --app-nav-text: #17324f;
+    --app-nav-muted: #54708b;
+    --app-nav-accent: #1ea9bb;
+    --app-nav-hover-bg: rgb(232 245 255 / 85%);
+    --app-nav-hover-border: rgb(120 166 205 / 44%);
+    --app-nav-hover-text: #1f4566;
+    --app-nav-active-bg: linear-gradient(120deg, #cbf5ef 0%, #acece4 60%, #97e2d8 100%);
+    --app-nav-active-border: rgb(105 170 190 / 56%);
+    --app-nav-active-text: #12354f;
+    --app-nav-menu-bg: linear-gradient(180deg, rgb(255 255 255 / 94%) 0%, rgb(240 248 255 / 90%) 100%);
+    --app-nav-menu-border: rgb(110 164 205 / 46%);
+    --app-nav-menu-line: #1b4567;
+    --app-nav-panel-bg: linear-gradient(180deg, rgb(251 254 255 / 97%) 0%, rgb(242 250 255 / 95%) 100%);
+    --app-nav-panel-border: rgb(110 164 205 / 46%);
+    --app-nav-panel-shadow: rgb(69 99 128 / 24%);
+    --app-nav-overlay: rgb(17 39 58 / 34%);
+    --app-top-button-bg: linear-gradient(120deg, #c9f5ef 0%, #a9ece3 52%, #90ddd4 100%);
+    --app-top-button-border: rgb(91 196 186 / 64%);
+    --app-top-button-text: #0f2f47;
+
+    --app-switch-bg: rgb(236 247 255 / 86%);
+    --app-switch-border: rgb(111 163 203 / 42%);
+    --app-switch-text: #31526f;
+    --app-switch-active-bg: linear-gradient(120deg, #cbf5ef 0%, #acece4 60%, #97e2d8 100%);
+    --app-switch-active-border: rgb(92 175 195 / 56%);
+    --app-switch-active-text: #11324b;
+    --app-switch-shadow: rgb(102 150 196 / 18%);
+}
+
+html[data-theme='dark'] {
+    --app-body-bg: #0a1526;
+    --app-bg-radial-primary: rgb(57 126 175 / 42%);
+    --app-bg-radial-secondary: rgb(44 140 134 / 30%);
+    --app-bg-linear-start: #0a1628;
+    --app-bg-linear-mid: #0e1d31;
+    --app-bg-linear-end: #0f2337;
+    --app-spot-primary: rgb(45 123 173 / 30%);
+    --app-spot-secondary: rgb(170 104 56 / 22%);
+    --app-grid-line: rgb(130 171 208 / 14%);
+
+    --app-panel-bg: rgb(14 27 43 / 80%);
+    --app-panel-border: rgb(101 140 176 / 32%);
+    --app-panel-shadow: rgb(2 10 20 / 44%);
+    --app-panel-highlight: rgb(165 198 230 / 8%);
+
+    --app-card-bg: linear-gradient(180deg, rgb(16 33 53 / 92%) 0%, rgb(13 28 45 / 90%) 100%);
+    --app-card-border: rgb(92 136 176 / 36%);
+    --app-card-shadow: rgb(0 8 20 / 36%);
+    --app-card-overlay: rgb(76 178 192 / 15%);
+    --app-card-hover-shadow: rgb(15 95 122 / 30%);
+    --app-card-hover-border: rgb(88 170 194 / 52%);
+    --app-card-inset: rgb(140 207 227 / 14%);
+
+    --app-skeleton-start: rgb(33 58 84 / 88%);
+    --app-skeleton-mid: rgb(48 78 107 / 98%);
+    --app-skeleton-end: rgb(33 58 84 / 88%);
+
+    --app-text-main: #d8e8f6;
+    --app-text-heading: #ebf5ff;
+    --app-text-strong: #f2f8ff;
+    --app-text-muted: #9cb9d2;
+    --app-text-soft: #b5cadd;
+
+    --app-pill-border: rgb(83 147 175 / 48%);
+    --app-pill-bg: rgb(21 58 80 / 76%);
+    --app-pill-text: #d5f2ff;
+
+    --app-input-bg: rgb(8 23 37 / 86%);
+    --app-input-border: rgb(88 133 170 / 52%);
+    --app-input-text: #e9f6ff;
+
+    --app-button-primary-bg: linear-gradient(120deg, #2e8d95 0%, #2b7785 52%, #245d71 100%);
+    --app-button-primary-border: rgb(71 167 178 / 58%);
+    --app-button-primary-text: #e8fbff;
+    --app-button-secondary-bg: linear-gradient(180deg, rgb(21 40 61 / 92%) 0%, rgb(17 33 52 / 90%) 100%);
+    --app-button-secondary-border: rgb(84 128 166 / 54%);
+    --app-button-secondary-text: #dcefff;
+    --app-button-shadow: rgb(15 121 137 / 28%);
+    --app-button-inset: rgb(178 239 255 / 14%);
+
+    --app-warning-bg: rgb(74 48 22 / 62%);
+    --app-warning-border: rgb(208 150 83 / 58%);
+    --app-warning-text: #ffd8aa;
+
+    --app-empty-bg: linear-gradient(180deg, rgb(20 38 59 / 84%) 0%, rgb(14 29 47 / 82%) 100%);
+    --app-empty-border: rgb(87 130 168 / 38%);
+    --app-empty-text: #c7d9ea;
+
+    --app-overlay: rgb(1 9 18 / 48%);
+    --app-overlay-strong: rgb(2 10 20 / 62%);
+
+    --app-focus-ring: #5ad5e4;
+    --app-accent-cyan: #52d4e2;
+    --app-accent-orange: #f4ad66;
+    --app-accent-mint: #72debc;
+
+    --app-nav-bg: rgb(9 21 35 / 86%);
+    --app-nav-bg-end: rgb(8 19 31 / 88%);
+    --app-nav-border: rgb(89 130 166 / 44%);
+    --app-nav-shadow: rgb(1 9 19 / 44%);
+    --app-nav-text: #dcefff;
+    --app-nav-muted: #a4bdd4;
+    --app-nav-accent: #5ad5e4;
+    --app-nav-hover-bg: rgb(25 50 74 / 82%);
+    --app-nav-hover-border: rgb(90 145 187 / 56%);
+    --app-nav-hover-text: #ebf7ff;
+    --app-nav-active-bg: linear-gradient(120deg, #2e8d95 0%, #2b7785 52%, #245d71 100%);
+    --app-nav-active-border: rgb(84 176 188 / 54%);
+    --app-nav-active-text: #ecfbff;
+    --app-nav-menu-bg: linear-gradient(180deg, rgb(20 40 61 / 92%) 0%, rgb(14 28 45 / 90%) 100%);
+    --app-nav-menu-border: rgb(84 129 166 / 56%);
+    --app-nav-menu-line: #d0e8ff;
+    --app-nav-panel-bg: linear-gradient(180deg, rgb(14 30 46 / 97%) 0%, rgb(10 24 40 / 95%) 100%);
+    --app-nav-panel-border: rgb(86 132 170 / 54%);
+    --app-nav-panel-shadow: rgb(0 8 18 / 44%);
+    --app-nav-overlay: rgb(2 10 20 / 62%);
+    --app-top-button-bg: linear-gradient(120deg, #2e8d95 0%, #2b7785 52%, #245d71 100%);
+    --app-top-button-border: rgb(84 176 188 / 62%);
+    --app-top-button-text: #e8fbff;
+
+    --app-switch-bg: rgb(15 34 52 / 86%);
+    --app-switch-border: rgb(87 130 167 / 54%);
+    --app-switch-text: #b8cde2;
+    --app-switch-active-bg: linear-gradient(120deg, #2e8d95 0%, #2b7785 52%, #245d71 100%);
+    --app-switch-active-border: rgb(84 176 188 / 56%);
+    --app-switch-active-text: #ecfbff;
+    --app-switch-shadow: rgb(1 10 19 / 34%);
 }
 
 html,
@@ -12,6 +210,8 @@ body {
 
 body {
     overflow-x: hidden;
+    background: var(--app-body-bg);
+    color: var(--app-text-main);
 }
 
 .appContent {

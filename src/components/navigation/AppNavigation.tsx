@@ -18,8 +18,9 @@ export default function AppNavigation() {
         <>
             <header className={styles.header}>
                 <div className={styles.bar}>
-                    <Link href="/" className={styles.brand}>
-                        LOTTO DASHBOARD
+                    <Link href="/" className={styles.brand} aria-label="LOTTO DASHBOARD 홈으로 이동">
+                        <span className={styles.brandWordmark} aria-hidden />
+                        <span className={styles.srOnly}>LOTTO DASHBOARD 홈으로 이동</span>
                     </Link>
 
                     <nav className={styles.desktopNav} aria-label="주요 메뉴">

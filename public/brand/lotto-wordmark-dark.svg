@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 104" role="img" aria-labelledby="title desc">
+    <title id="title">Lotto Dashboard dark wordmark</title>
+    <desc id="desc">Symbol mark with lotto balls and bright wordmark for dark backgrounds</desc>
+    <defs>
+        <linearGradient id="symbolBgDark" x1="12" y1="10" x2="92" y2="96" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#11335b" />
+            <stop offset="0.6" stop-color="#22639e" />
+            <stop offset="1" stop-color="#1bc9c8" />
+        </linearGradient>
+        <linearGradient id="glossDark" x1="20" y1="8" x2="84" y2="44" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#ffffff" stop-opacity="0.46" />
+            <stop offset="1" stop-color="#ffffff" stop-opacity="0" />
+        </linearGradient>
+        <linearGradient id="wordmarkFillDark" x1="122" y1="22" x2="370" y2="84" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#f3fbff" />
+            <stop offset="1" stop-color="#8eeeff" />
+        </linearGradient>
+        <filter id="darkGlow" x="-20%" y="-20%" width="140%" height="160%">
+            <feDropShadow dx="0" dy="2.2" stdDeviation="2.7" flood-color="#00111f" flood-opacity="0.5" />
+        </filter>
+    </defs>
+
+    <g filter="url(#darkGlow)">
+        <rect x="8" y="8" width="88" height="88" rx="24" fill="url(#symbolBgDark)" />
+        <rect x="10" y="10" width="84" height="32" rx="16" fill="url(#glossDark)" />
+        <rect x="8.5" y="8.5" width="87" height="87" rx="23.5" fill="none" stroke="#e3fbff" stroke-opacity="0.44" />
+
+        <circle cx="41.5" cy="58.5" r="20.4" fill="#f7fdff" />
+        <circle cx="41.5" cy="58.5" r="17.7" fill="#f5d65c" />
+        <circle cx="63.5" cy="41.5" r="19.4" fill="#f7fdff" />
+        <circle cx="63.5" cy="41.5" r="16.7" fill="#52c6fa" />
+        <circle cx="66.5" cy="68.5" r="17.4" fill="#f7fdff" />
+        <circle cx="66.5" cy="68.5" r="14.7" fill="#fb6d96" />
+
+        <circle cx="33.4" cy="50.4" r="3.3" fill="#ffffff" fill-opacity="0.62" />
+        <circle cx="55.2" cy="33.4" r="3.1" fill="#ffffff" fill-opacity="0.62" />
+        <circle cx="58.9" cy="61.9" r="2.8" fill="#ffffff" fill-opacity="0.62" />
+
+        <path d="M20.2 34.8l2.3 4.7 5.1.7-3.7 3.3.9 5-4.6-2.6-4.4 2.6.8-5-3.8-3.3 5.2-.7 2.2-4.7z" fill="#ffffff" />
+    </g>
+
+    <g filter="url(#darkGlow)">
+        <path d="M116 26h292" stroke="#94ecff" stroke-opacity="0.8" stroke-width="2.2" stroke-linecap="round" />
+        <text x="116" y="57" fill="url(#wordmarkFillDark)" font-size="30" font-weight="800" letter-spacing="2.2" font-family="'Avenir Next','Segoe UI',Arial,sans-serif">
+            LOTTO DASHBOARD
+        </text>
+        <text x="118" y="78" fill="#b9ddf2" font-size="12" font-weight="700" letter-spacing="4.6" font-family="'Avenir Next','Segoe UI',Arial,sans-serif">
+            DATA INSIGHTS CONSOLE
+        </text>
+    </g>
+</svg>

@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from 'next';
+import Script from 'next/script';
 import AppNavigation from '../components/navigation/AppNavigation';
 import './globals.css';
 import Providers from './providers';
@@ -22,17 +23,19 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <html lang="ko" suppressHydrationWarning data-theme="light">
             <head>
                 <script dangerouslySetInnerHTML={{ __html: THEME_INITIALIZER_SCRIPT }} />
-                <script
-                    async
-                    src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${GOOGLE_ADSENSE_CLIENT}`}
-                    crossOrigin="anonymous"
-                />
             </head>
             <body>
                 <Providers>
                     <AppNavigation />
                     <div className="appContent">{children}</div>
                 </Providers>
+                <Script
+                    id="google-adsense-loader"
+                    async
+                    strategy="afterInteractive"
+                    src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${GOOGLE_ADSENSE_CLIENT}`}
+                    crossOrigin="anonymous"
+                />
             </body>
         </html>
     );
